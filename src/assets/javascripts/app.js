@@ -703,6 +703,16 @@ var vm = new Vue({
         document.body.classList.value = "theme-" + this.theme.name;
       }
     },
+    toggleShortcuts: function() {
+      if (this.settings === 'shortcuts') {
+        this.settings = ''
+      } else if (this.settings === '') {
+        this.settings = 'shortcuts'
+      }
+    },
+    closeDialog: function() {
+      this.settings = ''
+    },
   }
 })
 
