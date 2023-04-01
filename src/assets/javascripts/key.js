@@ -212,7 +212,7 @@ var codebindings = {
   Digit1: shortcutFunctions.showUnread,
   Digit2: shortcutFunctions.showStarred,
   Digit3: shortcutFunctions.showAll,
-  Space: shortcutFunctions.toggleFolder,
+  Enter: shortcutFunctions.toggleFolder,
   Escape: shortcutFunctions.closeDialog,
 };
 
