@@ -169,8 +169,14 @@ var shortcutFunctions = {
     vm.closeDialog();
   },
   toggleFullscreen() {
-    if (document.fullscreenElement === null) {
-      // In Fullscreen mode
+    const element = document.documentElement;
+    const isFullscreen = element.fullscreen ||
+          element.mozFullScreen ||
+          element.webkitIsFullScreen ||
+          element.webkitFullScreen ||
+          element.msFullScreen;
+
+    if (isFullscreen) {
       const exitMethod = document.cancelFullScreen
             || document.webkitCancelFullScreen
             || document.mozCancelFullScreen
@@ -179,13 +185,12 @@ var shortcutFunctions = {
         exitMethod.call(document)
       }
     } else {
-      // Not In Fullscreen mode
-      const requestMethod = document.requestFullScreen
-            || document.webkitRequestFullScreen
-            || document.mozRequestFullScreen
-            || document.msRequestFullScreen;
+      const requestMethod = element.requestFullScreen
+            || element.webkitRequestFullScreen
+            || element.mozRequestFullScreen
+            || element.msRequestFullScreen;
       if (requestMethod) {
-        requestMethod.call(document)
+        requestMethod.call(element)
       }
     }
   }
