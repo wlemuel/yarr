@@ -167,6 +167,27 @@ var shortcutFunctions = {
   },
   closeDialog() {
     vm.closeDialog();
+  },
+  toggleFullscreen() {
+    if (document.fullscreenElement === null) {
+      // In Fullscreen mode
+      const exitMethod = document.cancelFullScreen
+            || document.webkitCancelFullScreen
+            || document.mozCancelFullScreen
+            || document.exitFullScreen;
+      if (exitMethod) {
+        exitMethod.call(document)
+      }
+    } else {
+      // Not In Fullscreen mode
+      const requestMethod = document.requestFullScreen
+            || document.webkitRequestFullScreen
+            || document.mozRequestFullScreen
+            || document.msRequestFullScreen;
+      if (requestMethod) {
+        requestMethod.call(document)
+      }
+    }
   }
 };
 
@@ -183,8 +204,8 @@ var keybindings = {
   k: shortcutFunctions.previousItem,
   l: shortcutFunctions.nextFeed,
   h: shortcutFunctions.previousFeed,
-  f: shortcutFunctions.scrollForward,
-  b: shortcutFunctions.scrollBackward,
+  f: shortcutFunctions.toggleFullscreen,
+  // b: shortcutFunctions.scrollBackward,
   n: shortcutFunctions.scrollForward,
   p: shortcutFunctions.scrollBackward,
   1: shortcutFunctions.showUnread,
@@ -205,8 +226,8 @@ var codebindings = {
   KeyK: shortcutFunctions.previousItem,
   KeyL: shortcutFunctions.nextFeed,
   KeyH: shortcutFunctions.previousFeed,
-  KeyF: shortcutFunctions.scrollForward,
-  KeyB: shortcutFunctions.scrollBackward,
+  KeyF: shortcutFunctions.toggleFullscreen,
+  // KeyB: shortcutFunctions.scrollBackward,
   KeyN: shortcutFunctions.scrollForward,
   KeyP: shortcutFunctions.scrollBackward,
   Digit1: shortcutFunctions.showUnread,
