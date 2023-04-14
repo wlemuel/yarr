@@ -194,12 +194,14 @@ var shortcutFunctions = {
     const feedList = document.getElementById('col-feed-list');
     const itemList = document.getElementById('col-item-list');
 
-    if (feedList.style.display !== '' || itemList.style.display !== '') {
-      feedList.style.display = '';
-      itemList.style.display = '';
+    if (feedList.classList.contains('hidden') || itemList.classList.contains('hidden')) {
+      console.log('display')
+      feedList.classList.remove('hidden');
+      itemList.classList.remove('hidden');
     } else {
-      feedList.style.display = 'none !important';
-      itemList.style.display = 'none !important';
+      console.log('hide')
+      feedList.classList.add('hidden');
+      itemList.classList.add('hidden');
     }
   }
 };
