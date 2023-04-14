@@ -195,11 +195,9 @@ var shortcutFunctions = {
     const itemList = document.getElementById('col-item-list');
 
     if (feedList.classList.contains('hidden') || itemList.classList.contains('hidden')) {
-      console.log('display')
       feedList.classList.remove('hidden');
       itemList.classList.remove('hidden');
     } else {
-      console.log('hide')
       feedList.classList.add('hidden');
       itemList.classList.add('hidden');
     }
