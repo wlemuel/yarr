@@ -189,6 +189,18 @@ var shortcutFunctions = {
         requestMethod.call(element)
       }
     }
+  },
+  toggleFullContent() {
+    const feedList = document.getElementById('col-feed-list');
+    const itemList = document.getElementById('col-item-list');
+
+    if (feedList.style.display !== '' || itemList.style.display !== '') {
+      feedList.style.display = '';
+      itemList.style.display = '';
+    } else {
+      feedList.style.display = 'none !important';
+      itemList.style.display = 'none !important';
+    }
   }
 };
 
@@ -206,6 +218,7 @@ var keybindings = {
   l: shortcutFunctions.nextFeed,
   h: shortcutFunctions.previousFeed,
   f: shortcutFunctions.toggleFullscreen,
+  F: shortcutFunctions.toggleFullContent,
   // b: shortcutFunctions.scrollBackward,
   n: shortcutFunctions.scrollForward,
   p: shortcutFunctions.scrollBackward,
