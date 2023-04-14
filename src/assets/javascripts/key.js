@@ -170,11 +170,7 @@ var shortcutFunctions = {
   },
   toggleFullscreen() {
     const element = document.documentElement;
-    const isFullscreen = element.fullscreen ||
-          element.mozFullScreen ||
-          element.webkitIsFullScreen ||
-          element.webkitFullScreen ||
-          element.msFullScreen;
+    const isFullscreen = document.fullscreenElement !== null
 
     if (isFullscreen) {
       const exitMethod = document.cancelFullScreen
