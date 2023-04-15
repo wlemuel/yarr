@@ -8,12 +8,14 @@
     <link rel="icon" href="./static/graphicarts/favicon.svg" type="image/svg+xml">
     <link rel="alternate icon" href="./static/graphicarts/favicon.png" type="image/png">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="./static/javascripts/svg-inject.min.js"></script>
     <style>
         form {
             max-width: 300px;
             margin: 0 auto;
             padding: 1rem;
         }
+        form svg,
         form img {
             width: 4rem;
             height: 4rem;
@@ -24,7 +26,7 @@
 </head>
 <body>
     <form action="" method="post">
-        <img src="./static/graphicarts/anchor.svg" alt="">
+        <img src="./static/graphicarts/anchor.svg" alt="" onload="SVGInject(this)">
         {% if .error %}
             <div class="text-danger text-center my-3">{% .error %}</div>
         {% end %}
@@ -39,5 +41,12 @@
         </div>
         <button class="btn btn-block btn-default" type="submit">Login</button>
     </form>
+    <script>
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.body.classList.add('theme-night');
+        } else {
+            document.body.classList.add('theme-sepia');
+        }
+    </script>
 </body>
 </html>
