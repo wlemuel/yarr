@@ -204,11 +204,16 @@ var shortcutFunctions = {
   },
   toggleItemList() {
     const itemList = document.getElementById('col-item-list');
+    const feedList = document.getElementById('col-feed-list');
 
-    if (itemList.classList.contains('hidden')) {
-      itemList.classList.remove('hidden');
+    if (!feedList.classList.contains("hidden")) {
+      feedList.classList.add("hidden");
     } else {
-      itemList.classList.add('hidden');
+      if (itemList.classList.contains("hidden")) {
+        itemList.classList.remove("hidden");
+      } else {
+        itemList.classList.add("hidden");
+      }
     }
   },
   toggleTheme() {
