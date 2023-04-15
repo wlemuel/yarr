@@ -201,6 +201,13 @@ var shortcutFunctions = {
       feedList.classList.add('hidden');
       itemList.classList.add('hidden');
     }
+  },
+  toggleTheme() {
+    if (document.body.classList.value === 'theme-night') {
+      document.body.classList.value = "theme-sepia"
+    } else {
+      document.body.classList.value = "theme-night"
+    }
   }
 };
 
@@ -222,6 +229,7 @@ var keybindings = {
   // b: shortcutFunctions.scrollBackward,
   n: shortcutFunctions.scrollForward,
   p: shortcutFunctions.scrollBackward,
+  t: shortcutFunctions.toggleTheme,
   1: shortcutFunctions.showUnread,
   2: shortcutFunctions.showStarred,
   3: shortcutFunctions.showAll,
@@ -244,6 +252,7 @@ var codebindings = {
   // KeyB: shortcutFunctions.scrollBackward,
   KeyN: shortcutFunctions.scrollForward,
   KeyP: shortcutFunctions.scrollBackward,
+  KeyT: shortcutFunctions.toggleTheme,
   Digit1: shortcutFunctions.showUnread,
   Digit2: shortcutFunctions.showStarred,
   Digit3: shortcutFunctions.showAll,
