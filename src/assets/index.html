@@ -9,6 +9,7 @@
     <link rel="alternate icon" href="./static/graphicarts/favicon.png" type="image/png">
     <link rel="manifest" href="./manifest.json" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="./static/javascripts/svg-inject.min.js"></script>
     <script>
         window.app = window.app || {}
         window.app.settings = {% .settings %}
@@ -348,6 +349,16 @@
                     </div>
                     <div v-html="itemSelectedContent"></div>
                 </div>
+            </div>
+
+            <div v-if="itemSelectedDetails" 
+                 class="content-nav">
+                 <div @click="shortcutFunctions.previousItem()">
+                    <img src="./static/graphicarts/chevron-up.svg" alt="" onload="SVGInject(this)">
+                 </div>
+                 <div @click="shortcutFunctions.nextItem()" style="margin-top: 20px;">
+                    <img src="./static/graphicarts/chevron-down.svg" alt="" onload="SVGInject(this)">
+                 </div>
             </div>
         </div>
         <modal :open="!!settings" @hide="settings = ''">

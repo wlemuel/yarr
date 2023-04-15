@@ -540,6 +540,7 @@ a,
   #app #col-item {
     display: none !important;
   }
+  
 
   #app.item-selected #col-feed-list {
     display: none !important;
@@ -566,7 +567,6 @@ a,
     width: 100% !important;
     display: none !important;
   }
-
   #app.feed-selected #col-feed-list {
     display: none !important;
   }
@@ -598,6 +598,19 @@ a,
   .toolbar-item,
   .toolbar-search {
     padding: .5rem;
+  }
+  #app #col-item .content-nav {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+@media (min-width: 991.98px) {
+  #app #col-item .content-nav {
+    display: none;
   }
 }
 
