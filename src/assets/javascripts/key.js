@@ -202,6 +202,15 @@ var shortcutFunctions = {
       itemList.classList.add('hidden');
     }
   },
+  toggleItemList() {
+    const itemList = document.getElementById('col-item-list');
+
+    if (itemList.classList.contains('hidden')) {
+      itemList.classList.remove('hidden');
+    } else {
+      itemList.classList.add('hidden');
+    }
+  },
   toggleTheme() {
     if (document.body.classList.value === 'theme-night') {
       document.body.classList.value = "theme-sepia"
@@ -215,6 +224,7 @@ var shortcutFunctions = {
 var keybindings = {
   o: shortcutFunctions.openItemLink,
   i: shortcutFunctions.toggleReadability,
+  I: shortcutFunctions.toggleItemList,
   r: shortcutFunctions.toggleItemRead,
   R: shortcutFunctions.markAllRead,
   y: shortcutFunctions.markAllRead,
