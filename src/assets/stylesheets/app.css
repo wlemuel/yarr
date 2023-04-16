@@ -615,12 +615,6 @@ a,
   }
 }
 
-@media (min-width: 991.98px) {
-  #app #col-item .content-nav {
-    display: none;
-  }
-}
-
 /* theme-auto button */
 button.theme-auto {
   background: linear-gradient(to top right, white 50%, black 50%) !important;
