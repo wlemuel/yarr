@@ -601,7 +601,7 @@ a,
   }
   #app #col-item .content-nav {
     position: fixed;
-    bottom: 100px;
+    bottom: 200px;
     display: flex;
     flex-direction: column;
   }
