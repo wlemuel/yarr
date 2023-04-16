@@ -219,6 +219,7 @@ var vm = new Vue({
       'itemSearch': '',
       'itemSortNewestFirst': s.sort_newest_first,
       'itemListWidth': s.item_list_width || 300,
+      'itemNavPos': 'right',
 
       'filteredFeedStats': {},
       'filteredFolderStats': {},
@@ -713,6 +714,13 @@ var vm = new Vue({
     closeDialog: function() {
       this.settings = ''
     },
+    swapItemNavPos: function() {
+      if (this.itemNavPos === 'right') {
+        this.itemNavPos = 'left'
+      } else {
+        this.itemNavPos = 'right'
+      }
+    }
   }
 })
 
