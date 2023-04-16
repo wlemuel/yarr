@@ -200,9 +200,6 @@ var vm = new Vue({
       .addEventListener("change", () => {
         this.setTheme()
       });
-
-    this.isPcView = window.innerWidth > 992
-
   },
   data: function() {
     var s = app.settings
@@ -244,8 +241,7 @@ var vm = new Vue({
       },
       'refreshRate': s.refresh_rate,
       'authenticated': app.authenticated,
-      'feed_errors': {},
-      'isPcView': true
+      'feed_errors': {}
     }
   },
   computed: {

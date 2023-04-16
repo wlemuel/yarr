@@ -325,9 +325,8 @@
                 <a class="toolbar-item" :href="itemSelectedDetails.link" target="_blank" title="Open Link">
                     <span class="icon">{% inline "external-link.svg" %}</span>
                 </a>
-                <button class="toolbar-item"
+                <button class="toolbar-item d-lg-none"
                         title="Toggle Nav"
-                        v-if="!isPcView"
                         @click="swapItemNavPos">
                     <span class="icon">{% inline "code.svg" %}</span>
                 </button>
