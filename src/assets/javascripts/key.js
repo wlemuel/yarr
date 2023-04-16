@@ -44,6 +44,11 @@ var helperFunctions = {
 
     vm.itemSelected = vm.items[newPosition].id;
 
+    // load more if current selected item is near bottom
+    if ((vm.items.length - newPosition) < 3) {
+      vm.loadMoreItems()
+    }
+
     vm.$nextTick(function () {
       var scroll = document.querySelector("#item-list-scroll");
 
