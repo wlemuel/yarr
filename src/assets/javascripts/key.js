@@ -227,9 +227,6 @@ var shortcutFunctions = {
     } else {
       document.body.classList.value = "theme-night"
     }
-  },
-  swapItemNavPos() {
-    vm.swapItemNavPos()
   }
 };
 

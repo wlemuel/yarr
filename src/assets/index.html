@@ -9,7 +9,6 @@
     <link rel="alternate icon" href="./static/graphicarts/favicon.png" type="image/png">
     <link rel="manifest" href="./manifest.json" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <script src="./static/javascripts/svg-inject.min.js"></script>
     <script>
         window.app = window.app || {}
         window.app.settings = {% .settings %}
@@ -326,6 +325,12 @@
                 <a class="toolbar-item" :href="itemSelectedDetails.link" target="_blank" title="Open Link">
                     <span class="icon">{% inline "external-link.svg" %}</span>
                 </a>
+                <button class="toolbar-item"
+                        title="Toggle Nav"
+                        v-if="!isPcView"
+                        @click="swapItemNavPos">
+                    <span class="icon">{% inline "code.svg" %}</span>
+                </button>
                 <div class="flex-grow-1"></div>
                 <button class="toolbar-item" @click="itemSelected=null" title="Close Article">
                     <span class="icon">{% inline "x.svg" %}</span>
@@ -354,14 +359,11 @@
             <div v-if="itemSelectedDetails" 
                  class="content-nav"
                  :class="{'content-nav-left': itemNavPos === 'left', 'content-nav-right': itemNavPos === 'right'}">
-                 <div @click="shortcutFunctions.previousItem()">
-                    <img src="./static/graphicarts/chevron-up.svg" alt="" onload="SVGInject(this)">
-                 </div>
-                 <div @click="shortcutFunctions.swapItemNavPos()" style="width: 50%;margin: 20px 0;">
-                    <img src="./static/graphicarts/minus.svg" alt="" onload="SVGInject(this)">
+                 <div @click="shortcutFunctions.previousItem()" style="margin-bottom: 20px;">
+                    <span class="icon">{% inline "chevron-up.svg" %}</span>
                  </div>
                  <div @click="shortcutFunctions.nextItem()">
-                    <img src="./static/graphicarts/chevron-down.svg" alt="" onload="SVGInject(this)">
+                    <span class="icon">{% inline "chevron-down.svg" %}</span>
                  </div>
             </div>
         </div>
