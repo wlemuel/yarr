@@ -263,9 +263,9 @@ var keybindings = {
   2: shortcutFunctions.showStarred,
   3: shortcutFunctions.showAll,
   "?": shortcutFunctions.toggleShortcuts,
-  "+": shortcutFunctions.increaseFontSize,
+  "=": shortcutFunctions.increaseFontSize,
   "-": shortcutFunctions.decreaseFontSize,
-  "=": shortcutFunctions.resetFontSize,
+  "+": shortcutFunctions.resetFontSize,
 };
 
 var codebindings = {
