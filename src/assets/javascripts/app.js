@@ -724,7 +724,7 @@ var vm = new Vue({
         this.itemNavPos = 'right'
       }
 
-      localStorage.setItem(KEY_CONTENT_NAV_POS)
+      localStorage.setItem(KEY_CONTENT_NAV_POS, this.itemNavPos)
     }
   }
 })
