@@ -2,6 +2,9 @@
 
 var TITLE = document.title
 
+// LocalStorage Keys
+const KEY_CONTENT_NAV_POS = 'CONTENT_NAV_POS'
+
 var debounce = function(callback, wait) {
   var timeout
   return function() {
@@ -219,7 +222,7 @@ var vm = new Vue({
       'itemSearch': '',
       'itemSortNewestFirst': s.sort_newest_first,
       'itemListWidth': s.item_list_width || 300,
-      'itemNavPos': 'right',
+      'itemNavPos': localStorage.getItem(KEY_CONTENT_NAV_POS) || 'right',
 
       'filteredFeedStats': {},
       'filteredFolderStats': {},
@@ -720,6 +723,8 @@ var vm = new Vue({
       } else {
         this.itemNavPos = 'right'
       }
+
+      localStorage.setItem(KEY_CONTENT_NAV_POS)
     }
   }
 })

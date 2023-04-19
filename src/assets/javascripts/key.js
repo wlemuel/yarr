@@ -227,6 +227,15 @@ var shortcutFunctions = {
     } else {
       document.body.classList.value = "theme-night"
     }
+  },
+  increaseFontSize() {
+    vm.incrFont(1)
+  },
+  decreaseFontSize() {
+    vm.incrFont(-1)
+  },
+  resetFontSize() {
+    vm.theme.size = 1
   }
 };
 
@@ -254,6 +263,9 @@ var keybindings = {
   2: shortcutFunctions.showStarred,
   3: shortcutFunctions.showAll,
   "?": shortcutFunctions.toggleShortcuts,
+  "+": shortcutFunctions.increaseFontSize,
+  "-": shortcutFunctions.decreaseFontSize,
+  "=": shortcutFunctions.resetFontSize,
 };
 
 var codebindings = {
