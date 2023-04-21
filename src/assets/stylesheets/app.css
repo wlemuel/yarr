@@ -601,17 +601,17 @@ a,
   }
   #app #col-item .content-nav {
     position: fixed;
-    bottom: 200px;
+    bottom: 330px;
     display: flex;
     flex-direction: column;
   }
 
   #app #col-item .content-nav-left {
-    left: 20px;
+    left: 5px;
   }
 
   #app #col-item .content-nav-right {
-    right: 20px;
+    right: 5px;
   }
 }
 

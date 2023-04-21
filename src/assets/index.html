@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>yarr!</title>
     <link rel="stylesheet" href="./static/stylesheets/bootstrap.min.css">
-    <link rel="stylesheet" href="./static/stylesheets/app.css">
+    <link rel="stylesheet" href="./static/stylesheets/app.css?v=202304211232">
     <link rel="icon" href="./static/graphicarts/favicon.svg" type="image/svg+xml">
     <link rel="alternate icon" href="./static/graphicarts/favicon.png" type="image/png">
     <link rel="manifest" href="./manifest.json" />
@@ -358,8 +358,11 @@
             <div v-if="itemSelectedDetails" 
                  class="content-nav d-lg-none"
                  :class="{'content-nav-left': itemNavPos === 'left', 'content-nav-right': itemNavPos === 'right'}">
-                 <div @click="shortcutFunctions.previousItem()" style="margin-bottom: 20px;">
+                 <div @click="shortcutFunctions.previousItem()">
                     <span class="icon">{% inline "chevron-up.svg" %}</span>
+                 </div>
+                 <div @click="itemSelected=null" style="margin: 30px 0px;">
+                    <span class="icon">{% inline "x.svg" %}</span>
                  </div>
                  <div @click="shortcutFunctions.nextItem()">
                     <span class="icon">{% inline "chevron-down.svg" %}</span>
