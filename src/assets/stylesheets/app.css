@@ -599,20 +599,21 @@ a,
   .toolbar-search {
     padding: .5rem;
   }
-  #app #col-item .content-nav {
+  #app .nav-container {
     position: fixed;
     bottom: 330px;
     display: flex;
     flex-direction: column;
   }
 
-  #app #col-item .content-nav-left {
+  #app .nav-left {
     left: 5px;
   }
 
-  #app #col-item .content-nav-right {
+  #app .nav-right {
     right: 5px;
   }
+
 }
 
 /* theme-auto button */

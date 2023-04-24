@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>yarr!</title>
     <link rel="stylesheet" href="./static/stylesheets/bootstrap.min.css">
-    <link rel="stylesheet" href="./static/stylesheets/app.css?v=202304211232">
+    <link rel="stylesheet" href="./static/stylesheets/app.css?v=202304240001">
     <link rel="icon" href="./static/graphicarts/favicon.svg" type="image/svg+xml">
     <meta name="apple-mobile-web-app-title" content="Yarr RSS">
     <link rel="apple-touch-icon" href="./static/graphicarts/appicon.png">
@@ -266,7 +266,7 @@
                     </button>
                 </dropdown>
             </div>
-            <div id="item-list-scroll" class="p-2 overflow-auto border-top flex-grow-1" v-scroll="loadMoreItems" ref="itemlist">
+            <div id="item-list-scroll" class="px-3 py-2 overflow-auto border-top flex-grow-1" v-scroll="loadMoreItems" ref="itemlist">
                 <label v-for="item in items" :key="item.id"
                        class="selectgroup">
                     <input type="radio" name="item" :value="item.id" v-model="itemSelected">
@@ -288,6 +288,16 @@
             </div>
             <div class="px-3 py-2 border-top text-danger text-break" v-if="feed_errors[current.feed.id]">
                 {{ feed_errors[current.feed.id] }}
+            </div>
+
+            <div class="nav-container d-lg-none"
+                 :class="{'nav-left': itemNavPos === 'left', 'nav-right': itemNavPos === 'right'}">
+                <div @click="markItemsRead()" v-if="filterSelected == 'unread'" style="margin-bottom: 30px;">
+                    <span class="icon">{% inline "check.svg" %}</span>
+                 </div>
+                 <div @click="feedSelected = null">
+                    <span class="icon">{% inline "chevron-left.svg" %}</span>
+                 </div>
             </div>
         </div>
         <!-- item show -->
@@ -359,8 +369,8 @@
             </div>
 
             <div v-if="itemSelectedDetails" 
-                 class="content-nav d-lg-none"
-                 :class="{'content-nav-left': itemNavPos === 'left', 'content-nav-right': itemNavPos === 'right'}">
+                 class="nav-container d-lg-none"
+                 :class="{'nav-left': itemNavPos === 'left', 'nav-right': itemNavPos === 'right'}">
                  <div @click="shortcutFunctions.previousItem()">
                     <span class="icon">{% inline "chevron-up.svg" %}</span>
                  </div>
