@@ -236,11 +236,15 @@ var shortcutFunctions = {
   },
   resetFontSize() {
     vm.theme.size = 1
+  },
+  showAddFeedDlg() {
+    vm.showSettings('create')
   }
 };
 
 // If you edit, make sure you update the help modal
 var keybindings = {
+  A: shortcutFunctions.showAddFeedDlg,
   o: shortcutFunctions.openItemLink,
   i: shortcutFunctions.toggleReadability,
   I: shortcutFunctions.toggleItemList,
