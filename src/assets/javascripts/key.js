@@ -49,6 +49,9 @@ var helperFunctions = {
       vm.loadMoreItems()
     }
 
+    // dismiss loading readability
+    vm.loading.readability = false
+
     vm.$nextTick(function () {
       var scroll = document.querySelector("#item-list-scroll");
 
