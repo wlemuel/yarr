@@ -152,11 +152,14 @@ var shortcutFunctions = {
   scrollForward: function () {
     helperFunctions.scrollContent(+1);
   },
-  scrollForwardHalf: function() {
-    helperFunctions.scrollContent(+0.4);
+  scrollForwardSmall: function() {
+    helperFunctions.scrollContent(+0.1)
   },
   scrollBackward: function () {
     helperFunctions.scrollContent(-1);
+  },
+  scrollBackwardSmall: function() {
+    helperFunctions.scrollContent(-0.1)
   },
   showAll() {
     vm.filterSelected = "";
@@ -259,8 +262,8 @@ var keybindings = {
   y: shortcutFunctions.markAllRead,
   s: shortcutFunctions.toggleItemStarred,
   "/": shortcutFunctions.focusSearch,
-  j: shortcutFunctions.nextItem,
-  k: shortcutFunctions.previousItem,
+  j: shortcutFunctions.scrollForwardSmall,
+  k: shortcutFunctions.scrollBackwardSmall,
   l: shortcutFunctions.nextFeed,
   h: shortcutFunctions.previousFeed,
   f: shortcutFunctions.toggleFullscreen,
@@ -276,6 +279,8 @@ var keybindings = {
   "=": shortcutFunctions.increaseFontSize,
   "-": shortcutFunctions.decreaseFontSize,
   "+": shortcutFunctions.resetFontSize,
+  "]": shortcutFunctions.nextItem,
+  "[": shortcutFunctions.previousItem,
 };
 
 var codebindings = {
@@ -286,8 +291,8 @@ var codebindings = {
   KeyY: shortcutFunctions.markAllRead,
   KeyS: shortcutFunctions.toggleItemStarred,
   Slash: shortcutFunctions.focusSearch,
-  KeyJ: shortcutFunctions.nextItem,
-  KeyK: shortcutFunctions.previousItem,
+  KeyJ: shortcutFunctions.scrollForwardSmall,
+  KeyK: shortcutFunctions.scrollBackwardSmall,
   KeyL: shortcutFunctions.nextFeed,
   KeyH: shortcutFunctions.previousFeed,
   KeyF: shortcutFunctions.toggleFullscreen,
@@ -299,7 +304,7 @@ var codebindings = {
   Digit2: shortcutFunctions.showStarred,
   Digit3: shortcutFunctions.showAll,
   Enter: shortcutFunctions.toggleFolder,
-  Space: shortcutFunctions.scrollForwardHalf,
+  Space: shortcutFunctions.scrollForward,
   Escape: shortcutFunctions.closeDialog,
 };
 
