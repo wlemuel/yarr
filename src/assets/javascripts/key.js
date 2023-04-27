@@ -152,6 +152,9 @@ var shortcutFunctions = {
   scrollForward: function () {
     helperFunctions.scrollContent(+1);
   },
+  scrollForwardHalf: function() {
+    helperFunctions.scrollContent(+0.4);
+  },
   scrollBackward: function () {
     helperFunctions.scrollContent(-1);
   },
@@ -296,6 +299,7 @@ var codebindings = {
   Digit2: shortcutFunctions.showStarred,
   Digit3: shortcutFunctions.showAll,
   Enter: shortcutFunctions.toggleFolder,
+  Space: shortcutFunctions.scrollForwardHalf,
   Escape: shortcutFunctions.closeDialog,
 };
 
