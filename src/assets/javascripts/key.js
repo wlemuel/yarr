@@ -153,13 +153,13 @@ var shortcutFunctions = {
     helperFunctions.scrollContent(+1);
   },
   scrollForwardSmall: function() {
-    helperFunctions.scrollContent(+0.1)
+    helperFunctions.scrollContent(+0.2)
   },
   scrollBackward: function () {
     helperFunctions.scrollContent(-1);
   },
   scrollBackwardSmall: function() {
-    helperFunctions.scrollContent(-0.1)
+    helperFunctions.scrollContent(-0.2)
   },
   showAll() {
     vm.filterSelected = "";
