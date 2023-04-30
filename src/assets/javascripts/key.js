@@ -1,3 +1,5 @@
+const IS_PHONE = window.innerWidth <= 768
+
 function scrollto(target, scroll) {
   var padding = 10;
   var targetRect = target.getBoundingClientRect();
@@ -248,6 +250,13 @@ var shortcutFunctions = {
   },
   showAddFeedDlg() {
     vm.showSettings('create')
+  },
+  phoneGoBack() {
+    if (vm.itemSelected) {
+      vm.itemSelected = null
+    } else if (vm.feedSelected) {
+      vm.feedSelected = null
+    }
   }
 };
 
@@ -349,3 +358,10 @@ document.addEventListener("keydown", function (event) {
     keybindFunction();
   }
 });
+
+if (IS_PHONE) {
+  window.addEventListener("popstate", function () {
+    history.pushState("_phone_back", null, location.href);
+    shortcutFunctions.phoneGoBack();
+  });
+}
