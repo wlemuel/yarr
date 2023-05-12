@@ -294,7 +294,7 @@ func (s *Storage) SyncSearch() {
 
 var (
 	itemsKeepSize = 50
-	itemsKeepDays = 90
+	itemsKeepDays = 30
 )
 
 // Delete old articles from the database to cleanup space.
@@ -304,7 +304,7 @@ var (
 //   - Keep at least the same amount of articles the feed provides (default: 50).
 //     This prevents from deleting items for rarely updated and/or ever-growing
 //     feeds which might eventually reappear as unread.
-//   - Keep entries for a certain period (default: 90 days).
+//   - Keep entries for a certain period (default: 30 days).
 func (s *Storage) DeleteOldItems() {
 	rows, err := s.db.Query(`
 		select
