@@ -274,7 +274,7 @@ func (s *Storage) SyncSearch() {
 		result, err := s.db.Exec(`
 			insert into search (title, description, content) values (?, "", ?)`,
 			// item.Title, htmlutil.ExtractText(item.Content),
-			item.Title, "",
+			item.Title, item.Title,
 		)
 		if err != nil {
 			log.Print(err)
