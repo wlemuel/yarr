@@ -358,4 +358,25 @@ func (s *Storage) DeleteOldItems() {
 			log.Printf("Deleted %d old items (feed: %d)", numDeleted, feedId)
 		}
 	}
+
+	// Delete old read items
+	result, err := s.db.Exec(`
+		delete from items 
+		where status = ? and date_arrived < ?
+	`,
+		READ,
+		time.Now().Add(-time.Hour*time.Duration(24*itemsKeepDays)),
+	)
+	if err != nil {
+		log.Print(err)
+		return
+	}
+	numDeleted, err := result.RowsAffected()
+	if err != nil {
+		log.Print(err)
+		return
+	}
+	if numDeleted > 0 {
+		log.Printf("Deleted %d old read items", numDeleted)
+	}
 }
