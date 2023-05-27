@@ -159,7 +159,8 @@
                             <div class="selectgroup-label d-flex align-items-center w-100">
                                 <span class="icon mr-2" v-if="!feed.has_icon">{% inline "rss.svg" %}</span>
                                 <span class="icon mr-2" v-else><img :src="'./api/feeds/'+feed.id+'/icon'" alt="" loading="lazy"></span>
-                                <span class="flex-fill text-left text-truncate">{{ feed.title }}</span>
+                                <span class="flex-fill text-left text-truncate" v-if="feed.status == 0">{{ feed.title }}</span>
+                                <span class="flex-fill text-left text-truncate" v-else><del>{{ feed.title }}</del></span>
                                 <span class="counter text-right">{{ filteredFeedStats[feed.id] || '' }}</span>
                                 <span class="icon flex-shrink-0 mx-2"
                                       :title="feed_errors[feed.id]"
@@ -222,6 +223,13 @@
                     <button class="dropdown-item" @click="renameFeed(current.feed)">
                         <span class="icon mr-1">{% inline "edit.svg" %}</span>
                         Rename
+                    </button>
+                    <div class="dropdown-divider"></div>
+                    <button class="dropdown-item"
+                        :class="{'text-warning': current.feed.status == 0, 'text-success': current.feed.status != 0 }"
+                        @click.prevent="toggleFeed(current.feed)">
+                        <span class="icon mr-1">{% inline "toggle-left.svg" %}</span>
+                        {{ current.feed.status == 0 ? "Disable" : "Enable" }}
                     </button>
                     <div class="dropdown-divider"></div>
                     <header class="dropdown-header">Move to...</header>

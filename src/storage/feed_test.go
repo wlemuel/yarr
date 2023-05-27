@@ -68,3 +68,31 @@ func TestDeleteFeed(t *testing.T) {
 		t.Fatal("feed still exists")
 	}
 }
+
+func TestDisableFeed(t *testing.T) {
+	db := testDB()
+	feed1 := db.CreateFeed("title", "", "http://example.com", "http://example.com/feed.xml", nil)
+
+	if !db.DisableFeed(feed1.Id) {
+		t.Error("cannot stop feed")
+	}
+
+	feed2 := db.GetFeed(feed1.Id)
+	if feed2.Status != STOPPED {
+		t.Error("failed to stop feed")
+	}
+}
+
+func TestEnableFeed(t *testing.T) {
+	db := testDB()
+	feed1 := db.CreateFeed("title", "", "http://example.com", "http://example.com/feed.xml", nil)
+
+	if !db.EnableFeed(feed1.Id) {
+		t.Error("cannot enable feed")
+	}
+
+	feed2 := db.GetFeed(feed1.Id)
+	if feed2.Status != NORMAL {
+		t.Error("failed to enable feed")
+	}
+}

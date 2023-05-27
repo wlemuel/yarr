@@ -43,6 +43,9 @@
       delete: function(id) {
         return api('delete', './api/feeds/' + id)
       },
+      toggle: function(id) {
+        return api('post', './api/feeds/toggle/' + id)
+      },
       list_items: function(id) {
         return api('get', './api/feeds/' + id + '/items').then(json)
       },
