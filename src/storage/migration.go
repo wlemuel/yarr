@@ -14,6 +14,7 @@ var migrations = []func(*sql.Tx) error{
 	m05_move_description_to_content,
 	m06_fill_missing_dates,
 	m07_add_feed_size,
+	m08_add_pocket,
 }
 
 var maxVersion = int64(len(migrations))
@@ -268,6 +269,15 @@ func m07_add_feed_size(tx *sql.Tx) error {
 		 size           integer not null default 0
 		);
 	`
+	_, err := tx.Exec(sql)
+	return err
+}
+
+func m08_add_pocket(tx *sql.Tx) error {
+	sql := `
+		ALTER TABLE items ADD COLUMN link_pocket INTEGER DEFAULT 0;
+	`
+
 	_, err := tx.Exec(sql)
 	return err
 }

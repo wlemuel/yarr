@@ -586,6 +586,9 @@ var vm = new Vue({
         vm.loading.newfeed = false
       })
     },
+    linkPocket: function(event) {
+      
+    },
     toggleItemStatus: function(item, targetstatus, fallbackstatus) {
       var oldstatus = item.status
       var newstatus = item.status !== targetstatus ? targetstatus : fallbackstatus

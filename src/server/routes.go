@@ -56,6 +56,7 @@ func (s *Server) handler() http.Handler {
 	r.For("/opml/export", s.handleOPMLExport)
 	r.For("/page", s.handlePageCrawl)
 	r.For("/logout", s.handleLogout)
+	r.For("/auth/pocket", s.handlePocket)
 
 	return r
 }
@@ -322,6 +323,14 @@ func (s *Server) handleItem(c *router.Context) {
 		}
 		if body.Status != nil {
 			s.db.UpdateItemStatus(id, *body.Status)
+
+			if *body.Status == storage.STARRED {
+				item := s.db.GetItem(id)
+
+				if item.LinkPocket != 0 {
+					s.pocket.Add(item.Link)
+				}
+			}
 		}
 		c.Out.WriteHeader(http.StatusOK)
 	} else {
@@ -508,4 +517,8 @@ func (s *Server) handlePageCrawl(c *router.Context) {
 func (s *Server) handleLogout(c *router.Context) {
 	auth.Logout(c.Out, s.BasePath)
 	c.Out.WriteHeader(http.StatusNoContent)
+}
+
+func (s *Server) handlePocket(c *router.Context) {
+
 }

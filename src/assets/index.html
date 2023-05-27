@@ -109,6 +109,11 @@
                         Export
                     </a>
                     <div class="dropdown-divider"></div>
+                    <button class="dropdown-item" @click="showSettings('pocket')">
+                        <span class="icon mr-1">{% inline "pocket.svg" %}</span>
+                        Link Pocket
+                    </button>
+                    <div class="dropdown-divider"></div>
                     <button class="dropdown-item" @click="showSettings('shortcuts')">
                         <span class="icon mr-1">{% inline "help-circle.svg" %}</span>
                         Shortcuts
@@ -413,6 +418,14 @@
                         </label>
                     </div>
                     <button class="btn btn-block btn-default mt-3" :class="{loading: loading.newfeed}" type="submit">Add</button>
+                </form>
+            </div>
+            <div v-else-if="settings=='pocket'">
+                <p class="cursor-default"><b>Link to Pocket</b></p>
+                <form action="" @submit.prevent="createFeed(event)" class="mt-4">
+                    <label for="pocket-customer-key">Customer Key</label>
+                    <input id="pocket-customer-key" name="customer-key" type="url" class="form-control" required autocomplete="off" v-focus>
+                    <button class="btn btn-block btn-default mt-3" type="submit">Confirm</button>
                 </form>
             </div>
             <div v-else-if="settings=='shortcuts'">
