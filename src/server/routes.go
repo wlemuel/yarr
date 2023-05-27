@@ -49,6 +49,7 @@ func (s *Server) handler() http.Handler {
 	r.For("/api/feeds/errors", s.handleFeedErrors)
 	r.For("/api/feeds/:id/icon", s.handleFeedIcon)
 	r.For("/api/feeds/:id", s.handleFeed)
+	r.For("/api/feeds/toggle/:id", s.handleFeedToggle)
 	r.For("/api/items", s.handleItemList)
 	r.For("/api/items/:id", s.handleItem)
 	r.For("/api/settings", s.handleSettings)
@@ -508,4 +509,27 @@ func (s *Server) handlePageCrawl(c *router.Context) {
 func (s *Server) handleLogout(c *router.Context) {
 	auth.Logout(c.Out, s.BasePath)
 	c.Out.WriteHeader(http.StatusNoContent)
+}
+
+func (s *Server) handleFeedToggle(c *router.Context) {
+	id, err := c.VarInt64("id")
+	if err != nil {
+		c.Out.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if c.Req.Method == "POST" {
+		feed := s.db.GetFeed(id)
+		if feed == nil {
+			c.Out.WriteHeader(http.StatusBadRequest)
+			return
+		}
+		if feed.Status == storage.FEED_NORMAL {
+			s.db.DisableFeed(id)
+		} else {
+			s.db.EnableFeed(id)
+		}
+		c.Out.WriteHeader(http.StatusOK)
+	} else {
+		c.Out.WriteHeader(http.StatusMethodNotAllowed)
+	}
 }

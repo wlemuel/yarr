@@ -14,6 +14,7 @@ var migrations = []func(*sql.Tx) error{
 	m05_move_description_to_content,
 	m06_fill_missing_dates,
 	m07_add_feed_size,
+	m08_feeds_add_status,
 }
 
 var maxVersion = int64(len(migrations))
@@ -267,6 +268,15 @@ func m07_add_feed_size(tx *sql.Tx) error {
 		 feed_id        references feeds(id) on delete cascade unique,
 		 size           integer not null default 0
 		);
+	`
+	_, err := tx.Exec(sql)
+	return err
+}
+
+func m08_feeds_add_status(tx *sql.Tx) error {
+	sql := `
+		alter table feeds add column status integer default 0;
+		create index if not exists idx_feed_status on feeds(status);
 	`
 	_, err := tx.Exec(sql)
 	return err
