@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"net/url"
 	"path/filepath"
 	"reflect"
 	"strconv"
@@ -57,6 +58,7 @@ func (s *Server) handler() http.Handler {
 	r.For("/opml/export", s.handleOPMLExport)
 	r.For("/page", s.handlePageCrawl)
 	r.For("/logout", s.handleLogout)
+	r.For("/proxy", s.handleImageProxy)
 
 	return r
 }
@@ -532,4 +534,23 @@ func (s *Server) handleFeedToggle(c *router.Context) {
 	} else {
 		c.Out.WriteHeader(http.StatusMethodNotAllowed)
 	}
+}
+
+func (s *Server) handleImageProxy(c *router.Context) {
+	imgUrl := c.Req.URL.Query().Get("url")
+	_, err := url.Parse(imgUrl)
+	if err != nil {
+		c.Out.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	body, ctype, err := worker.GetImage(imgUrl)
+	if err != nil {
+		log.Print(err)
+		c.Out.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	c.Out.Header().Add("Content-Type", ctype)
+	c.Out.Write(body)
 }

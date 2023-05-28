@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"io"
 	"math"
+	"net/url"
 	"regexp"
 	"strings"
 
@@ -49,6 +50,7 @@ func ExtractContent(page io.Reader) (string, error) {
 	}
 
 	transformMisusedDivsIntoParagraphs(root)
+	convertImageToProxyRequest(root)
 	removeUnlikelyCandidates(root)
 
 	scores := getCandidates(root)
@@ -275,6 +277,17 @@ func transformMisusedDivsIntoParagraphs(root *html.Node) {
 	for _, node := range htmlutil.Query(root, "div") {
 		if !divToPElementsRegexp.MatchString(htmlutil.InnerHTML(node)) {
 			node.Data = "p"
+		}
+	}
+}
+
+func convertImageToProxyRequest(root *html.Node) {
+	for _, node := range htmlutil.Query(root, "img") {
+		for i, attr := range node.Attr {
+			if attr.Key == "src" {
+				node.Attr[i].Val = "/proxy?url=" + url.QueryEscape(node.Attr[i].Val)
+				break
+			}
 		}
 	}
 }

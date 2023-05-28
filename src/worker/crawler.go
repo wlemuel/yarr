@@ -239,3 +239,20 @@ func GetBody(url string) (string, error) {
 	}
 	return string(body), nil
 }
+
+func GetImage(url string) ([]byte, string, error) {
+	res, err := client.get(url)
+	if err != nil {
+		return nil, "", err
+	}
+	defer res.Body.Close()
+
+	r := res.Body
+	body, err := io.ReadAll(r)
+	if err != nil {
+		return nil, "", err
+	}
+
+	ctype := res.Header.Get("Content-Type")
+	return body, ctype, nil
+}
