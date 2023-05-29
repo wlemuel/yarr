@@ -42,7 +42,15 @@ var helperFunctions = {
     }
 
     var newPosition = itemPosition + relativePosition;
-    if (newPosition < 0 || newPosition >= vm.items.length) return;
+    if (newPosition < 0) {
+      alert('No prev items');
+      return;
+    }
+
+    if (newPosition >= vm.items.length) {
+      alert('No more items');
+      return;
+    }
 
     vm.itemSelected = vm.items[newPosition].id;
 
