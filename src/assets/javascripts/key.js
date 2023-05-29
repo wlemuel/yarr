@@ -43,12 +43,12 @@ var helperFunctions = {
 
     var newPosition = itemPosition + relativePosition;
     if (newPosition < 0) {
-      alert('No prev items');
+      this.navigateToFeed(-1)
       return;
     }
 
     if (newPosition >= vm.items.length) {
-      alert('No more items');
+      this.navigateToFeed(+1)
       return;
     }
 
