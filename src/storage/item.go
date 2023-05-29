@@ -74,7 +74,7 @@ func (s *Storage) CreateItems(items []Item) bool {
 		return false
 	}
 
-	now := time.Now()
+	now := time.Now().UTC()
 
 	for _, item := range items {
 		_, err = tx.Exec(`
@@ -83,7 +83,7 @@ func (s *Storage) CreateItems(items []Item) bool {
 				content, image, podcast_url,
 				date_arrived, status
 			)
-			values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+			values (?, ?, ?, ?, strftime('%Y-%m-%d %H:%M:%f', ?), ?, ?, ?, ?, ?)
 			on conflict (feed_id, guid) do nothing`,
 			item.GUID, item.FeedId, item.Title, item.Link, item.Date,
 			item.Content, item.ImageURL, item.AudioURL,
@@ -342,7 +342,7 @@ func (s *Storage) DeleteOldItems() {
 			feedId,
 			STARRED,
 			limit,
-			time.Now().Add(-time.Hour*time.Duration(24*itemsKeepDays)),
+			time.Now().UTC().Add(-time.Hour*time.Duration(24*itemsKeepDays)),
 		)
 		if err != nil {
 			log.Print(err)

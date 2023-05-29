@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"time"
 )
 
 var migrations = []func(*sql.Tx) error{
@@ -15,6 +16,7 @@ var migrations = []func(*sql.Tx) error{
 	m06_fill_missing_dates,
 	m07_add_feed_size,
 	m08_feeds_add_status,
+	m09_normalize_datetime,
 }
 
 var maxVersion = int64(len(migrations))
@@ -279,5 +281,26 @@ func m08_feeds_add_status(tx *sql.Tx) error {
 		create index if not exists idx_feed_status on feeds(status);
 	`
 	_, err := tx.Exec(sql)
+	return err
+}
+
+func m09_normalize_datetime(tx *sql.Tx) error {
+	rows, err := tx.Query(`select id, date_arrived from items;`)
+	if err != nil {
+		return err
+	}
+	for rows.Next() {
+		var id int64
+		var dateArrived time.Time
+		err = rows.Scan(&id, &dateArrived)
+		if err != nil {
+			return err
+		}
+		_, err = tx.Exec(`update items set date_arrived = ? where id = ?;`, dateArrived.UTC(), id)
+		if err != nil {
+			return err
+		}
+	}
+	_, err = tx.Exec(`update items set date = strftime('%Y-%m-%d %H:%M:%f', date);`)
 	return err
 }

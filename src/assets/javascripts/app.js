@@ -710,7 +710,7 @@ var vm = new Vue({
           "(prefers-color-scheme: dark)"
         ).matches
           ? "theme-night"
-          : "theme-sepia";
+          : "theme-light";
       } else {
         document.body.classList.value = "theme-" + this.theme.name;
       }
