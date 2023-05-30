@@ -17,6 +17,7 @@ var migrations = []func(*sql.Tx) error{
 	m07_add_feed_size,
 	m08_feeds_add_status,
 	m09_normalize_datetime,
+	m10_add_pocket,
 }
 
 var maxVersion = int64(len(migrations))
@@ -302,5 +303,14 @@ func m09_normalize_datetime(tx *sql.Tx) error {
 		}
 	}
 	_, err = tx.Exec(`update items set date = strftime('%Y-%m-%d %H:%M:%f', date);`)
+	return err
+}
+
+func m10_add_pocket(tx *sql.Tx) error {
+	sql := `
+		ALTER TABLE items ADD COLUMN link_pocket INTEGER DEFAULT 0;
+	`
+
+	_, err := tx.Exec(sql)
 	return err
 }

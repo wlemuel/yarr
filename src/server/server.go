@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"sync"
 
+	"github.com/nkanaev/yarr/src/integration/pocket"
 	"github.com/nkanaev/yarr/src/storage"
 	"github.com/nkanaev/yarr/src/worker"
 )
@@ -15,6 +16,7 @@ type Server struct {
 	worker      *worker.Worker
 	cache       map[string]interface{}
 	cache_mutex *sync.Mutex
+	pocket      *pocket.Client
 
 	BasePath string
 
@@ -33,6 +35,7 @@ func NewServer(db *storage.Storage, addr string) *Server {
 		worker:      worker.NewWorker(db),
 		cache:       make(map[string]interface{}),
 		cache_mutex: &sync.Mutex{},
+		pocket:      pocket.NewClient(db),
 	}
 }
 

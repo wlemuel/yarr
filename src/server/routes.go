@@ -59,6 +59,8 @@ func (s *Server) handler() http.Handler {
 	r.For("/page", s.handlePageCrawl)
 	r.For("/logout", s.handleLogout)
 	r.For("/proxy", s.handleImageProxy)
+	r.For("/pocket/auth", s.handlePocketAuth)
+	r.For("/pocket/add", s.handlePocketAdd)
 
 	return r
 }
@@ -327,6 +329,14 @@ func (s *Server) handleItem(c *router.Context) {
 		}
 		if body.Status != nil {
 			s.db.UpdateItemStatus(id, *body.Status)
+
+			if *body.Status == storage.STARRED {
+				item := s.db.GetItem(id)
+
+				if item.LinkPocket != 0 {
+					s.pocket.Add(item.Link)
+				}
+			}
 		}
 		c.Out.WriteHeader(http.StatusOK)
 	} else {
@@ -555,4 +565,32 @@ func (s *Server) handleImageProxy(c *router.Context) {
 
 	c.Out.Header().Add("Content-Type", ctype)
 	c.Out.Write(body)
+}
+
+func (s *Server) handlePocketAuth(c *router.Context) {
+	if c.Req.Method == "POST" {
+		redirectUrl := fmt.Sprintf("https://%s/pocket/auth", c.Req.Host)
+		_, err := s.pocket.GetRequestToken(redirectUrl)
+		if err != nil {
+			c.Out.WriteHeader(http.StatusBadRequest)
+			return
+		}
+		authUrl, err := s.pocket.GetAuthorizationURL(redirectUrl)
+		if err != nil {
+			c.Out.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		c.JSON(http.StatusOK, map[string]string{"auth_url": authUrl})
+	} else if c.Req.Method == "GET" {
+		s.pocket.Authorize()
+		redirectUrl := fmt.Sprintf("https://%s", c.Req.Host)
+		http.Redirect(c.Out, c.Req, redirectUrl, http.StatusPermanentRedirect)
+	} else {
+		c.Out.WriteHeader(http.StatusMethodNotAllowed)
+	}
+}
+
+func (s *Server) handlePocketAdd(c *router.Context) {
+
 }

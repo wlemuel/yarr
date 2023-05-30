@@ -42,16 +42,17 @@ func (s *ItemStatus) UnmarshalJSON(b []byte) error {
 }
 
 type Item struct {
-	Id       int64      `json:"id"`
-	GUID     string     `json:"guid"`
-	FeedId   int64      `json:"feed_id"`
-	Title    string     `json:"title"`
-	Link     string     `json:"link"`
-	Content  string     `json:"content,omitempty"`
-	Date     time.Time  `json:"date"`
-	Status   ItemStatus `json:"status"`
-	ImageURL *string    `json:"image"`
-	AudioURL *string    `json:"podcast_url"`
+	Id         int64      `json:"id"`
+	GUID       string     `json:"guid"`
+	FeedId     int64      `json:"feed_id"`
+	Title      string     `json:"title"`
+	Link       string     `json:"link"`
+	Content    string     `json:"content,omitempty"`
+	Date       time.Time  `json:"date"`
+	Status     ItemStatus `json:"status"`
+	ImageURL   *string    `json:"image"`
+	AudioURL   *string    `json:"podcast_url"`
+	LinkPocket int64      `json:"link_pocket"`
 }
 
 type ItemFilter struct {
@@ -160,7 +161,7 @@ func (s *Storage) ListItems(filter ItemFilter, limit int, newestFirst bool) []It
 		select
 			i.id, i.guid, i.feed_id,
 			i.title, i.link, i.date,
-			i.status, i.image, i.podcast_url
+			i.status, i.image, i.podcast_url, i.link_pocket
 		from items i
 		where %s
 		order by %s
@@ -176,7 +177,7 @@ func (s *Storage) ListItems(filter ItemFilter, limit int, newestFirst bool) []It
 		err = rows.Scan(
 			&x.Id, &x.GUID, &x.FeedId,
 			&x.Title, &x.Link, &x.Date,
-			&x.Status, &x.ImageURL, &x.AudioURL,
+			&x.Status, &x.ImageURL, &x.AudioURL, &x.LinkPocket,
 		)
 		if err != nil {
 			log.Print(err)
@@ -192,12 +193,12 @@ func (s *Storage) GetItem(id int64) *Item {
 	err := s.db.QueryRow(`
 		select
 			i.id, i.guid, i.feed_id, i.title, i.link, i.content,
-			i.date, i.status, i.image, i.podcast_url
+			i.date, i.status, i.image, i.podcast_url, i.link_pocket
 		from items i
 		where i.id = ?
 	`, id).Scan(
 		&i.Id, &i.GUID, &i.FeedId, &i.Title, &i.Link, &i.Content,
-		&i.Date, &i.Status, &i.ImageURL, &i.AudioURL,
+		&i.Date, &i.Status, &i.ImageURL, &i.AudioURL, &i.LinkPocket,
 	)
 	if err != nil {
 		log.Print(err)
