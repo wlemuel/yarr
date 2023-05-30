@@ -561,6 +561,14 @@ var vm = new Vue({
         })
       }
     },
+    toggleFeed: function(feed) {
+      if (confirm('Are you sure you want to toggle ' + feed.title + '?')) {
+        api.feeds.toggle(feed.id).then(function() {
+          vm.refreshStats()
+          vm.refreshFeeds()
+        })
+      }
+    },
     createFeed: function(event) {
       var form = event.target
       var data = {
@@ -705,7 +713,7 @@ var vm = new Vue({
           "(prefers-color-scheme: dark)"
         ).matches
           ? "theme-night"
-          : "theme-sepia";
+          : "theme-light";
       } else {
         document.body.classList.value = "theme-" + this.theme.name;
       }

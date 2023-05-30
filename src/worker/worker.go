@@ -96,7 +96,7 @@ func (w *Worker) RefreshFeeds() {
 		return
 	}
 
-	feeds := w.db.ListFeeds()
+	feeds := w.db.ListNormalFeeds()
 	if len(feeds) == 0 {
 		log.Print("Nothing to refresh")
 		return
