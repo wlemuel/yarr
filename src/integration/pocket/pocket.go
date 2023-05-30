@@ -93,8 +93,8 @@ type Client struct {
 }
 
 func NewClient(db *storage.Storage) *Client {
-	accessToken = db.GetSettingsValue("access_token").(string)
-	consumerKey = db.GetSettingsValue("consumer_key").(string)
+	// accessToken = db.GetSettingsValue("access_token").(string)
+	// consumerKey = db.GetSettingsValue("consumer_key").(string)
 
 	return &Client{
 		client: &http.Client{
