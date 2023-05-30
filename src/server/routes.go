@@ -56,7 +56,8 @@ func (s *Server) handler() http.Handler {
 	r.For("/opml/export", s.handleOPMLExport)
 	r.For("/page", s.handlePageCrawl)
 	r.For("/logout", s.handleLogout)
-	r.For("/auth/pocket", s.handlePocket)
+	r.For("/pocket/auth", s.handlePocketAuth)
+	r.For("/pocket/add", s.handlePocketAdd)
 
 	return r
 }
@@ -519,6 +520,30 @@ func (s *Server) handleLogout(c *router.Context) {
 	c.Out.WriteHeader(http.StatusNoContent)
 }
 
-func (s *Server) handlePocket(c *router.Context) {
+func (s *Server) handlePocketAuth(c *router.Context) {
+	if c.Req.Method == "POST" {
+		redirectUrl := fmt.Sprintf("https://%s/pocket/auth", c.Req.Host)
+		_, err := s.pocket.GetRequestToken(redirectUrl)
+		if err != nil {
+			c.Out.WriteHeader(http.StatusBadRequest)
+			return
+		}
+		authUrl, err := s.pocket.GetAuthorizationURL(redirectUrl)
+		if err != nil {
+			c.Out.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		c.JSON(http.StatusOK, map[string]string{"auth_url": authUrl})
+	} else if c.Req.Method == "GET" {
+		s.pocket.Authorize()
+		redirectUrl := fmt.Sprintf("https://%s", c.Req.Host)
+		http.Redirect(c.Out, c.Req, redirectUrl, http.StatusPermanentRedirect)
+	} else {
+		c.Out.WriteHeader(http.StatusMethodNotAllowed)
+	}
+}
+
+func (s *Server) handlePocketAdd(c *router.Context) {
 
 }

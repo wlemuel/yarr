@@ -17,6 +17,7 @@ func settingsDefaults() map[string]interface{} {
 		"theme_size":        1,
 		"refresh_rate":      0,
 		"access_token":      "",
+		"consumer_key":      "",
 	}
 }
 

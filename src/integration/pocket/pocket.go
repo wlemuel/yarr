@@ -2,7 +2,6 @@ package pocket
 
 import (
 	"bytes"
-	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -107,13 +106,13 @@ func NewClient(db *storage.Storage) *Client {
 }
 
 // GetRequestToken obtains the request token that is used to authorize user in your application
-func (c *Client) GetRequestToken(ctx context.Context, redirectUrl string) (string, error) {
+func (c *Client) GetRequestToken(redirectUrl string) (string, error) {
 	inp := &requestTokenRequest{
 		ConsumerKey: c.consumerKey,
 		RedirectURI: redirectUrl,
 	}
 
-	values, err := c.doHTTP(ctx, endpointRequestToken, inp)
+	values, err := c.doHTTP(endpointRequestToken, inp)
 	if err != nil {
 		return "", err
 	}
@@ -122,11 +121,13 @@ func (c *Client) GetRequestToken(ctx context.Context, redirectUrl string) (strin
 		return "", errors.New("empty request token in API response")
 	}
 
-	return values.Get("code"), nil
+	requestToken = values.Get("code")
+
+	return requestToken, nil
 }
 
 // GetAuthorizationURL generates link to authorize user
-func (c *Client) GetAuthorizationURL(requestToken, redirectUrl string) (string, error) {
+func (c *Client) GetAuthorizationURL(redirectUrl string) (string, error) {
 	if requestToken == "" || redirectUrl == "" {
 		return "", errors.New("empty params")
 	}
@@ -135,7 +136,7 @@ func (c *Client) GetAuthorizationURL(requestToken, redirectUrl string) (string, 
 }
 
 // Authorize generates access token for user, that authorized in your app via link
-func (c *Client) Authorize(ctx context.Context, requestToken string) (*AuthorizeResponse, error) {
+func (c *Client) Authorize() (*AuthorizeResponse, error) {
 	if requestToken == "" {
 		return nil, errors.New("empty request token")
 	}
@@ -145,7 +146,7 @@ func (c *Client) Authorize(ctx context.Context, requestToken string) (*Authorize
 		ConsumerKey: c.consumerKey,
 	}
 
-	values, err := c.doHTTP(ctx, endpointAuthorize, inp)
+	values, err := c.doHTTP(endpointAuthorize, inp)
 	if err != nil {
 		return nil, err
 	}
@@ -155,19 +156,24 @@ func (c *Client) Authorize(ctx context.Context, requestToken string) (*Authorize
 		return nil, errors.New("empty access token in API response")
 	}
 
+	settings := make(map[string]interface{})
+	settings["access_token"] = accessToken
+
+	c.db.UpdateSettings(settings)
+
 	return &AuthorizeResponse{
 		AccessToken: accessToken,
 		Username:    username,
 	}, nil
 }
 
-func (c *Client) add(ctx context.Context, input AddInput) (int64, error) {
+func (c *Client) add(input AddInput) (int64, error) {
 	if err := input.validate(); err != nil {
 		return 0, err
 	}
 
 	req := input.generateRequest(c.consumerKey)
-	resp, err := c.doHTTP(ctx, endpointAdd, req)
+	resp, err := c.doHTTP(endpointAdd, req)
 
 	item := resp.Get("item")
 	fmt.Printf("Pocket item: %s", item)
@@ -181,8 +187,7 @@ func (c *Client) Add(url string) error {
 		return errors.New("failed to get access token")
 	}
 
-	ctx := context.Background()
-	_, err := c.add(ctx, AddInput{
+	_, err := c.add(AddInput{
 		URL:         url,
 		AccessToken: accessToken,
 	})
@@ -190,13 +195,13 @@ func (c *Client) Add(url string) error {
 	return err
 }
 
-func (c *Client) doHTTP(ctx context.Context, endpoint string, body interface{}) (url.Values, error) {
+func (c *Client) doHTTP(endpoint string, body interface{}) (url.Values, error) {
 	b, err := json.Marshal(body)
 	if err != nil {
 		return url.Values{}, errors.New("failed to marshal input body")
 	}
 
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, host+endpoint, bytes.NewBuffer(b))
+	req, err := http.NewRequest(http.MethodPost, host+endpoint, bytes.NewBuffer(b))
 	if err != nil {
 		return url.Values{}, errors.New("failed to create new request")
 	}
@@ -229,7 +234,6 @@ func (c *Client) doHTTP(ctx context.Context, endpoint string, body interface{}) 
 }
 
 var (
-	client       *Client
 	consumerKey  string = ""
 	requestToken string = ""
 	accessToken  string = ""
