@@ -49,6 +49,16 @@ func (s *Storage) GetSettingsValueInt64(key string) int64 {
 	return 0
 }
 
+func (s *Storage) GetSettingsValueString(key string) string {
+	val := s.GetSettingsValue(key)
+	if val != nil {
+		if fval, ok := val.(string); ok {
+			return string(fval)
+		}
+	}
+	return ""
+}
+
 func (s *Storage) GetSettings() map[string]interface{} {
 	result := settingsDefaults()
 	rows, err := s.db.Query(`select key, val from settings;`)
