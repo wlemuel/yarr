@@ -8,6 +8,7 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"net/url"
 	"regexp"
 	"strconv"
 	"strings"
@@ -120,7 +121,7 @@ func sanitizeAttributes(baseURL, tagName string, attributes []html.Attribute) ([
 			continue
 		}
 
-		if (tagName == "img" || tagName == "source") && !strings.HasPrefix(value, "/proxy?url=") && attribute.Key == "srcset" {
+		if (tagName == "img" || tagName == "source") && attribute.Key == "srcset" {
 			value = sanitizeSrcsetAttr(baseURL, value)
 		}
 
@@ -133,6 +134,8 @@ func sanitizeAttributes(baseURL, tagName string, attributes []html.Attribute) ([
 				}
 			} else if tagName == "img" && attribute.Key == "src" && isValidDataAttribute(attribute.Val) {
 				value = attribute.Val
+			} else if tagName == "img" && attribute.Key == "src" {
+				value = "/proxy?url=" + url.QueryEscape(attribute.Val)
 			} else {
 				value = htmlutil.AbsoluteUrl(value, baseURL)
 				if value == "" {
@@ -423,7 +426,6 @@ func isValidDataAttribute(value string) bool {
 		"data:image/jpeg",
 		"data:image/gif",
 		"data:image/webp",
-		"/proxy?url=",
 	}
 
 	for _, prefix := range dataAttributeAllowList {
