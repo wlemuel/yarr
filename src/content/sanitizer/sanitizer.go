@@ -134,7 +134,7 @@ func sanitizeAttributes(baseURL, tagName string, attributes []html.Attribute) ([
 				}
 			} else if tagName == "img" && attribute.Key == "src" && isValidDataAttribute(attribute.Val) {
 				value = attribute.Val
-			} else if tagName == "img" && attribute.Key == "src" {
+			} else if tagName == "img" && attribute.Key == "src" && strings.HasPrefix(attribute.Val, "http") {
 				value = "/proxy?url=" + url.QueryEscape(attribute.Val)
 			} else {
 				value = htmlutil.AbsoluteUrl(value, baseURL)
