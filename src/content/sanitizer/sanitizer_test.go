@@ -8,9 +8,10 @@ import "testing"
 
 func TestValidInput(t *testing.T) {
 	input := `<p>This is a <strong>text</strong> with an image: <img src="http://example.org/" alt="Test" loading="lazy">.</p>`
+	expected := `<p>This is a <strong>text</strong> with an image: <img src="/proxy?url=http%3A%2F%2Fexample.org%2F" alt="Test" loading="lazy">.</p>`
 	output := Sanitize("http://example.org/", input)
 
-	if input != output {
+	if output != expected {
 		t.Errorf(`Wrong output: "%s" != "%s"`, input, output)
 	}
 }
@@ -47,7 +48,7 @@ func TestImgWithSrcset(t *testing.T) {
 
 func TestImgWithSrcsetAndDataURL(t *testing.T) {
 	input := `<img srcset="data:image/gif;base64,test" src="http://example.org/example-320w.jpg" alt="Example">`
-	expected := `<img srcset="data:image/gif;base64,test" src="http://example.org/example-320w.jpg" alt="Example" loading="lazy">`
+	expected := `<img srcset="data:image/gif;base64,test" src="/proxy?url=http%3A%2F%2Fexample.org%2Fexample-320w.jpg" alt="Example" loading="lazy">`
 	output := Sanitize("http://example.org/", input)
 
 	if output != expected {
@@ -67,7 +68,7 @@ func TestSourceWithSrcsetAndMedia(t *testing.T) {
 
 func TestMediumImgWithSrcset(t *testing.T) {
 	input := `<img alt="Image for post" class="t u v ef aj" src="https://miro.medium.com/max/5460/1*aJ9JibWDqO81qMfNtqgqrw.jpeg" srcset="https://miro.medium.com/max/552/1*aJ9JibWDqO81qMfNtqgqrw.jpeg 276w, https://miro.medium.com/max/1000/1*aJ9JibWDqO81qMfNtqgqrw.jpeg 500w" sizes="500px" width="2730" height="3407">`
-	expected := `<img alt="Image for post" src="https://miro.medium.com/max/5460/1*aJ9JibWDqO81qMfNtqgqrw.jpeg" srcset="https://miro.medium.com/max/552/1*aJ9JibWDqO81qMfNtqgqrw.jpeg 276w, https://miro.medium.com/max/1000/1*aJ9JibWDqO81qMfNtqgqrw.jpeg 500w" sizes="500px" loading="lazy">`
+	expected := `<img alt="Image for post" src="/proxy?url=https%3A%2F%2Fmiro.medium.com%2Fmax%2F5460%2F1%2AaJ9JibWDqO81qMfNtqgqrw.jpeg" srcset="https://miro.medium.com/max/552/1*aJ9JibWDqO81qMfNtqgqrw.jpeg 276w, https://miro.medium.com/max/1000/1*aJ9JibWDqO81qMfNtqgqrw.jpeg 500w" sizes="500px" loading="lazy">`
 	output := Sanitize("http://example.org/", input)
 
 	if output != expected {
@@ -77,9 +78,10 @@ func TestMediumImgWithSrcset(t *testing.T) {
 
 func TestSelfClosingTags(t *testing.T) {
 	input := `<p>This <br> is a <strong>text</strong> <br/>with an image: <img src="http://example.org/" alt="Test" loading="lazy"/>.</p>`
+	expected := `<p>This <br> is a <strong>text</strong> <br/>with an image: <img src="/proxy?url=http%3A%2F%2Fexample.org%2F" alt="Test" loading="lazy"/>.</p>`
 	output := Sanitize("http://example.org/", input)
 
-	if input != output {
+	if output != expected {
 		t.Errorf(`Wrong output: "%s" != "%s"`, input, output)
 	}
 }
@@ -235,7 +237,7 @@ func TestXMPPURIScheme(t *testing.T) {
 
 func TestBlacklistedLink(t *testing.T) {
 	input := `<p>This image is not valid <img src="https://stats.wordpress.com/some-tracker"></p>`
-	expected := `<p>This image is not valid </p>`
+	expected := `<p>This image is not valid <img src="/proxy?url=https%3A%2F%2Fstats.wordpress.com%2Fsome-tracker" loading="lazy"></p>`
 	output := Sanitize("http://example.org/", input)
 
 	if expected != output {
