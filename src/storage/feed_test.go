@@ -78,7 +78,7 @@ func TestDisableFeed(t *testing.T) {
 	}
 
 	feed2 := db.GetFeed(feed1.Id)
-	if feed2.Status != STOPPED {
+	if feed2.Status != FEED_STOPPED {
 		t.Error("failed to stop feed")
 	}
 }
@@ -92,7 +92,7 @@ func TestEnableFeed(t *testing.T) {
 	}
 
 	feed2 := db.GetFeed(feed1.Id)
-	if feed2.Status != NORMAL {
+	if feed2.Status != FEED_NORMAL {
 		t.Error("failed to enable feed")
 	}
 }

@@ -14,7 +14,10 @@ import (
 )
 
 func TestStatic(t *testing.T) {
-	handler := NewServer(nil, "127.0.0.1:8000").handler()
+	log.SetOutput(io.Discard)
+	db, _ := storage.New(":memory:")
+	log.SetOutput(os.Stderr)
+	handler := NewServer(db, "127.0.0.1:8000").handler()
 	url := "/static/javascripts/app.js"
 
 	recorder := httptest.NewRecorder()
@@ -26,7 +29,10 @@ func TestStatic(t *testing.T) {
 }
 
 func TestStaticWithBase(t *testing.T) {
-	server := NewServer(nil, "127.0.0.1:8000")
+	log.SetOutput(io.Discard)
+	db, _ := storage.New(":memory:")
+	log.SetOutput(os.Stderr)
+	server := NewServer(db, "127.0.0.1:8000")
 	server.BasePath = "/sub"
 
 	handler := server.handler()
@@ -41,7 +47,10 @@ func TestStaticWithBase(t *testing.T) {
 }
 
 func TestStaticBanTemplates(t *testing.T) {
-	handler := NewServer(nil, "127.0.0.1:8000").handler()
+	log.SetOutput(io.Discard)
+	db, _ := storage.New(":memory:")
+	log.SetOutput(os.Stderr)
+	handler := NewServer(db, "127.0.0.1:8000").handler()
 	url := "/static/login.html"
 
 	recorder := httptest.NewRecorder()
