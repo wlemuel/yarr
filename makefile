@@ -26,6 +26,10 @@ build_windows:
 	windres -i src/platform/versioninfo.rc -O coff -o src/platform/versioninfo.syso
 	GOOS=windows GOARCH=amd64 go build -tags "sqlite_foreign_keys release windows" -ldflags="$(GO_LDFLAGS) -H windowsgui" -o _output/windows/yarr.exe src/main.go
 
+build_debug:
+	mkdir -p _output
+	go build -tags "sqlite_foreign_keys release" -gcflags=all="-N -l" -o _output/yarr_debug src/main.go
+
 serve:
 	go run -tags "sqlite_foreign_keys" src/main.go -db local.db
 

@@ -87,7 +87,7 @@
         return api('put', './api/items' + param(query))
       },
       pocket_add: function(id) {
-        return api('post', './pocket/add/' + id)
+        return api('post', './pocket/add/' + id).then(json)
       }
     },
     settings: {

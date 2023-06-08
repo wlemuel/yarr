@@ -596,16 +596,18 @@ func (s *Server) handlePocketAdd(c *router.Context) {
 			return
 		}
 
-		if item.LinkPocket == 0 {
-			err := s.pocket.Add(item.Link)
+		linkPocket := item.LinkPocket
+		if item.LinkPocket == "" {
+			pocket_id, err := s.pocket.Add(item.Link)
 			if err != nil {
 				c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
 				return
 			}
-			s.db.UpdateItemLinkPocket(id, 1)
+			s.db.UpdateItemLinkPocket(id, pocket_id)
+			linkPocket = pocket_id
 		}
+		c.JSON(http.StatusOK, map[string]string{"link_pocket": linkPocket})
 
-		c.Out.WriteHeader(http.StatusOK)
 	} else {
 		c.Out.WriteHeader(http.StatusMethodNotAllowed)
 	}

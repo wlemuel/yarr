@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"net/url"
 	"strings"
 	"time"
 
@@ -93,8 +92,8 @@ type Client struct {
 }
 
 func NewClient(db *storage.Storage) *Client {
-	// accessToken = db.GetSettingsValueString("access_token")
-	// consumerKey = db.GetSettingsValueString("consumer_key")
+	accessToken = db.GetSettingsValueString("access_token")
+	consumerKey = db.GetSettingsValueString("consumer_key")
 
 	return &Client{
 		client: &http.Client{
@@ -117,11 +116,15 @@ func (c *Client) GetRequestToken(redirectUrl string) (string, error) {
 		return "", err
 	}
 
-	if values.Get("code") == "" {
-		return "", errors.New("empty request token in API response")
+	for k, v := range values {
+		if k == "code" {
+			requestToken = v.(string)
+		}
 	}
 
-	requestToken = values.Get("code")
+	if requestToken == "" {
+		return "", errors.New("empty request token in API response")
+	}
 
 	return requestToken, nil
 }
@@ -151,7 +154,17 @@ func (c *Client) Authorize() (*AuthorizeResponse, error) {
 		return nil, err
 	}
 
-	accessToken, username := values.Get("access_token"), values.Get("username")
+	var username string
+
+	for k, v := range values {
+		if k == "access_token" {
+			accessToken = v.(string)
+		} else if k == "username" {
+			username = v.(string)
+		}
+
+	}
+
 	if accessToken == "" {
 		return nil, errors.New("empty access token in API response")
 	}
@@ -167,74 +180,84 @@ func (c *Client) Authorize() (*AuthorizeResponse, error) {
 	}, nil
 }
 
-func (c *Client) add(input AddInput) (int64, error) {
+func (c *Client) add(input AddInput) (string, error) {
 	if err := input.validate(); err != nil {
-		return 0, err
+		return "", err
 	}
 
 	req := input.generateRequest(c.consumerKey)
 	resp, err := c.doHTTP(endpointAdd, req)
+	if err != nil {
+		return "", err
+	}
 
-	item := resp.Get("item")
-	fmt.Printf("Pocket item: %s, %s", input.URL, item)
+	fmt.Printf("pocket add: %s, %v\n", input.URL, resp)
 
-	return 1, err
+	if item, ok := resp["item"].(map[string]interface{}); ok {
+		if item_id, ok := item["item_id"].(string); ok {
+			return item_id, err
+		}
+	}
+
+	return "", err
 }
 
 // Add creates new item in Pocket list
-func (c *Client) Add(url string) error {
+func (c *Client) Add(url string) (string, error) {
+	accessToken = c.db.GetSettingsValueString("access_token")
 	if accessToken == "" {
-		return errors.New("failed to get access token")
+		return "", errors.New("failed to get access token")
 	}
 
-	_, err := c.add(AddInput{
+	item_id, err := c.add(AddInput{
 		URL:         url,
 		AccessToken: accessToken,
 	})
 
-	return err
+	return item_id, err
 }
 
-func (c *Client) doHTTP(endpoint string, body interface{}) (url.Values, error) {
+func (c *Client) doHTTP(endpoint string, body interface{}) (map[string]interface{}, error) {
 	b, err := json.Marshal(body)
 	if err != nil {
-		return url.Values{}, errors.New("failed to marshal input body")
+		return nil, errors.New("failed to marshal input body")
 	}
 
 	req, err := http.NewRequest(http.MethodPost, host+endpoint, bytes.NewBuffer(b))
 	if err != nil {
-		return url.Values{}, errors.New("failed to create new request")
+		return nil, errors.New("failed to create new request")
 	}
 
 	req.Header.Set("Content-Type", "application/json; charset=UTF8")
 
 	resp, err := c.client.Do(req)
 	if err != nil {
-		return url.Values{}, errors.New("failed to send http request")
+		return nil, errors.New("failed to send http request")
 	}
 
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
 		err := fmt.Sprintf("API Error: %s", resp.Header.Get(xErrorHeader))
-		return url.Values{}, errors.New(err)
+		return nil, errors.New(err)
 	}
 
 	respB, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return url.Values{}, errors.New("failed to read request body")
+		return nil, errors.New("failed to read request body")
 	}
 
-	values, err := url.ParseQuery(string(respB))
+	var values map[string]interface{}
+	err = json.Unmarshal(respB, &values)
 	if err != nil {
-		return url.Values{}, errors.New("failed to parse response body")
+		return nil, errors.New("failed to parse response body")
 	}
 
 	return values, nil
 }
 
 var (
-	consumerKey  string = "30410-da1b34ce81aec5843a2214f4"
+	consumerKey  string = ""
 	requestToken string = ""
-	accessToken  string = "a80f7322-5dff-311d-fa27-bd5b0c"
+	accessToken  string = ""
 )

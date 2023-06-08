@@ -52,7 +52,7 @@ type Item struct {
 	Status     ItemStatus `json:"status"`
 	ImageURL   *string    `json:"image"`
 	AudioURL   *string    `json:"podcast_url"`
-	LinkPocket int64      `json:"link_pocket"`
+	LinkPocket string    `json:"link_pocket"`
 }
 
 type ItemFilter struct {
@@ -212,7 +212,7 @@ func (s *Storage) UpdateItemStatus(item_id int64, status ItemStatus) bool {
 	return err == nil
 }
 
-func (s *Storage) UpdateItemLinkPocket(item_id int64, pocket_id int64) bool {
+func (s *Storage) UpdateItemLinkPocket(item_id int64, pocket_id string) bool {
 	_, err := s.db.Exec(`update items set link_pocket = ? where id = ?`, pocket_id, item_id)
 	return err == nil
 }

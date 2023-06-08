@@ -738,14 +738,16 @@ var vm = new Vue({
       localStorage.setItem(KEY_CONTENT_NAV_POS, this.itemNavPos)
     },
     pocketAdd: function(item) {
-      if (item.link_pocket != 0) {
+      if (item.link_pocket !== "") {
+        let url = "https://getpocket.com/read/" + item.link_pocket
+        window.open(url, '_blank');
         return
       }
 
-      api.items.pocket_add(item.id).then(function() {
+      api.items.pocket_add(item.id).then(function(result) {
         var itemInList = this.items.find(function(i) { return i.id == item.id })
-        if (itemInList) itemInList.link_pocket = 1
-        item.link_pocket = 1
+        if (itemInList) itemInList.link_pocket = result.link_pocket
+        item.link_pocket = result.link_pocket
       }.bind(this))
     }
   }
