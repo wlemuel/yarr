@@ -116,17 +116,11 @@ func (c *Client) GetRequestToken(redirectUrl string) (string, error) {
 		return "", err
 	}
 
-	for k, v := range values {
-		if k == "code" {
-			requestToken = v.(string)
-		}
+	if requestToken, ok := values["code"].(string); ok {
+		return requestToken, nil
 	}
 
-	if requestToken == "" {
-		return "", errors.New("empty request token in API response")
-	}
-
-	return requestToken, nil
+	return "", errors.New("empty request token in API response")
 }
 
 // GetAuthorizationURL generates link to authorize user
@@ -154,25 +148,21 @@ func (c *Client) Authorize() (*AuthorizeResponse, error) {
 		return nil, err
 	}
 
-	var username string
+	if token, ok := values["access_token"].(string); ok {
+		settings := make(map[string]interface{})
+		settings["access_token"] = token
 
-	for k, v := range values {
-		if k == "access_token" {
-			accessToken = v.(string)
-		} else if k == "username" {
-			username = v.(string)
-		}
+		c.db.UpdateSettings(settings)
 
-	}
-
-	if accessToken == "" {
+		accessToken = token
+	} else {
 		return nil, errors.New("empty access token in API response")
 	}
 
-	settings := make(map[string]interface{})
-	settings["access_token"] = accessToken
-
-	c.db.UpdateSettings(settings)
+	var username string
+	if user, ok := values["username"].(string); ok {
+		username = user
+	}
 
 	return &AuthorizeResponse{
 		AccessToken: accessToken,
