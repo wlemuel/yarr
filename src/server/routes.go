@@ -60,7 +60,7 @@ func (s *Server) handler() http.Handler {
 	r.For("/logout", s.handleLogout)
 	r.For("/proxy", s.handleImageProxy)
 	r.For("/pocket/auth", s.handlePocketAuth)
-	r.For("/pocket/add", s.handlePocketAdd)
+	r.For("/pocket/add/:id", s.handlePocketAdd)
 
 	return r
 }
@@ -329,14 +329,6 @@ func (s *Server) handleItem(c *router.Context) {
 		}
 		if body.Status != nil {
 			s.db.UpdateItemStatus(id, *body.Status)
-
-			if *body.Status == storage.STARRED {
-				item := s.db.GetItem(id)
-
-				if item.LinkPocket != 0 {
-					s.pocket.Add(item.Link)
-				}
-			}
 		}
 		c.Out.WriteHeader(http.StatusOK)
 	} else {
@@ -592,5 +584,29 @@ func (s *Server) handlePocketAuth(c *router.Context) {
 }
 
 func (s *Server) handlePocketAdd(c *router.Context) {
+	id, err := c.VarInt64("id")
+	if err != nil {
+		c.Out.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if c.Req.Method == "POST" {
+		item := s.db.GetItem(id)
+		if item == nil {
+			c.Out.WriteHeader(http.StatusBadRequest)
+			return
+		}
 
+		if item.LinkPocket == 0 {
+			err := s.pocket.Add(item.Link)
+			if err != nil {
+				c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
+				return
+			}
+			s.db.UpdateItemLinkPocket(id, 1)
+		}
+
+		c.Out.WriteHeader(http.StatusOK)
+	} else {
+		c.Out.WriteHeader(http.StatusMethodNotAllowed)
+	}
 }

@@ -212,6 +212,11 @@ func (s *Storage) UpdateItemStatus(item_id int64, status ItemStatus) bool {
 	return err == nil
 }
 
+func (s *Storage) UpdateItemLinkPocket(item_id int64, pocket_id int64) bool {
+	_, err := s.db.Exec(`update items set link_pocket = ? where id = ?`, pocket_id, item_id)
+	return err == nil
+}
+
 func (s *Storage) MarkItemsRead(filter MarkFilter) bool {
 	predicate, args := listQueryPredicate(ItemFilter{FolderID: filter.FolderID, FeedID: filter.FeedID}, false)
 	query := fmt.Sprintf(`
@@ -361,7 +366,7 @@ func (s *Storage) DeleteOldItems() {
 
 	// Delete old read items
 	// result, err := s.db.Exec(`
-	// 	delete from items 
+	// 	delete from items
 	// 	where status = ? and date_arrived < ?
 	// `,
 	// 	READ,

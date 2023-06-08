@@ -93,8 +93,8 @@ type Client struct {
 }
 
 func NewClient(db *storage.Storage) *Client {
-	accessToken = db.GetSettingsValueString("access_token")
-	consumerKey = db.GetSettingsValueString("consumer_key")
+	// accessToken = db.GetSettingsValueString("access_token")
+	// consumerKey = db.GetSettingsValueString("consumer_key")
 
 	return &Client{
 		client: &http.Client{
@@ -176,7 +176,7 @@ func (c *Client) add(input AddInput) (int64, error) {
 	resp, err := c.doHTTP(endpointAdd, req)
 
 	item := resp.Get("item")
-	fmt.Printf("Pocket item: %s", item)
+	fmt.Printf("Pocket item: %s, %s", input.URL, item)
 
 	return 1, err
 }
@@ -234,7 +234,7 @@ func (c *Client) doHTTP(endpoint string, body interface{}) (url.Values, error) {
 }
 
 var (
-	consumerKey  string = ""
+	consumerKey  string = "30410-da1b34ce81aec5843a2214f4"
 	requestToken string = ""
-	accessToken  string = ""
+	accessToken  string = "a80f7322-5dff-311d-fa27-bd5b0c"
 )

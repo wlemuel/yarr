@@ -348,6 +348,12 @@
                         title="Read Here">
                     <span class="icon" :class="{'icon-loading': loading.readability}">{% inline "book-open.svg" %}</span>
                 </button>
+                <button class="toolbar-item"
+                        title="Add to Pocket"
+                        @click="pocketAdd(itemSelectedDetails)">
+                    <span class="icon" v-if="itemSelectedDetails.link_pocket == 0">{% inline "pocket.svg" %}</span>
+                    <span class="icon" v-if="itemSelectedDetails.link_pocket != 0" style="color: red;">{% inline "pocket.svg" %}</span>
+                </button>
                 <a class="toolbar-item" :href="itemSelectedDetails.link" target="_blank" title="Open Link">
                     <span class="icon">{% inline "external-link.svg" %}</span>
                 </a>

@@ -265,6 +265,11 @@ var shortcutFunctions = {
     } else if (vm.feedSelected) {
       vm.feedSelected = null
     }
+  },
+  pocketAdd: function () {
+    if (vm.itemSelected != null) {
+      vm.pocketAdd(vm.itemSelectedDetails);
+    }
   }
 };
 
@@ -288,6 +293,7 @@ var keybindings = {
   // b: shortcutFunctions.scrollBackward,
   n: shortcutFunctions.scrollForwardSmall,
   p: shortcutFunctions.scrollBackwardSmall,
+  P: shortcutFunctions.pocketAdd,
   t: shortcutFunctions.toggleTheme,
   1: shortcutFunctions.showUnread,
   2: shortcutFunctions.showStarred,
