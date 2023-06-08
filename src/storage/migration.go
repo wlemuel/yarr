@@ -18,6 +18,7 @@ var migrations = []func(*sql.Tx) error{
 	m08_feeds_add_status,
 	m09_normalize_datetime,
 	m10_add_pocket,
+	m11_update_pocket_link_type,
 }
 
 var maxVersion = int64(len(migrations))
@@ -311,6 +312,16 @@ func m10_add_pocket(tx *sql.Tx) error {
 		ALTER TABLE items ADD COLUMN link_pocket INTEGER DEFAULT 0;
 	`
 
+	_, err := tx.Exec(sql)
+	return err
+}
+
+func m11_update_pocket_link_type(tx *sql.Tx) error {
+	sql := `
+		ALTER TABLE items DROP COLUMN link_pocket;
+		ALTER TABLE items ADD COLUMN link_pocket TEXT DEFAULT "";
+	`
+	
 	_, err := tx.Exec(sql)
 	return err
 }

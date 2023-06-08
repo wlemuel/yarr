@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"net/url"
 	"strings"
 	"time"
 
@@ -117,13 +116,11 @@ func (c *Client) GetRequestToken(redirectUrl string) (string, error) {
 		return "", err
 	}
 
-	if values.Get("code") == "" {
-		return "", errors.New("empty request token in API response")
+	if requestToken, ok := values["code"].(string); ok {
+		return requestToken, nil
 	}
 
-	requestToken = values.Get("code")
-
-	return requestToken, nil
+	return "", errors.New("empty request token in API response")
 }
 
 // GetAuthorizationURL generates link to authorize user
@@ -151,15 +148,21 @@ func (c *Client) Authorize() (*AuthorizeResponse, error) {
 		return nil, err
 	}
 
-	accessToken, username := values.Get("access_token"), values.Get("username")
-	if accessToken == "" {
+	if token, ok := values["access_token"].(string); ok {
+		settings := make(map[string]interface{})
+		settings["access_token"] = token
+
+		c.db.UpdateSettings(settings)
+
+		accessToken = token
+	} else {
 		return nil, errors.New("empty access token in API response")
 	}
 
-	settings := make(map[string]interface{})
-	settings["access_token"] = accessToken
-
-	c.db.UpdateSettings(settings)
+	var username string
+	if user, ok := values["username"].(string); ok {
+		username = user
+	}
 
 	return &AuthorizeResponse{
 		AccessToken: accessToken,
@@ -167,67 +170,77 @@ func (c *Client) Authorize() (*AuthorizeResponse, error) {
 	}, nil
 }
 
-func (c *Client) add(input AddInput) (int64, error) {
+func (c *Client) add(input AddInput) (string, error) {
 	if err := input.validate(); err != nil {
-		return 0, err
+		return "", err
 	}
 
 	req := input.generateRequest(c.consumerKey)
 	resp, err := c.doHTTP(endpointAdd, req)
+	if err != nil {
+		return "", err
+	}
 
-	item := resp.Get("item")
-	fmt.Printf("Pocket item: %s", item)
+	fmt.Printf("pocket add: %s, %v\n", input.URL, resp)
 
-	return 1, err
+	if item, ok := resp["item"].(map[string]interface{}); ok {
+		if item_id, ok := item["item_id"].(string); ok {
+			return item_id, err
+		}
+	}
+
+	return "", err
 }
 
 // Add creates new item in Pocket list
-func (c *Client) Add(url string) error {
+func (c *Client) Add(url string) (string, error) {
+	accessToken = c.db.GetSettingsValueString("access_token")
 	if accessToken == "" {
-		return errors.New("failed to get access token")
+		return "", errors.New("failed to get access token")
 	}
 
-	_, err := c.add(AddInput{
+	item_id, err := c.add(AddInput{
 		URL:         url,
 		AccessToken: accessToken,
 	})
 
-	return err
+	return item_id, err
 }
 
-func (c *Client) doHTTP(endpoint string, body interface{}) (url.Values, error) {
+func (c *Client) doHTTP(endpoint string, body interface{}) (map[string]interface{}, error) {
 	b, err := json.Marshal(body)
 	if err != nil {
-		return url.Values{}, errors.New("failed to marshal input body")
+		return nil, errors.New("failed to marshal input body")
 	}
 
 	req, err := http.NewRequest(http.MethodPost, host+endpoint, bytes.NewBuffer(b))
 	if err != nil {
-		return url.Values{}, errors.New("failed to create new request")
+		return nil, errors.New("failed to create new request")
 	}
 
 	req.Header.Set("Content-Type", "application/json; charset=UTF8")
 
 	resp, err := c.client.Do(req)
 	if err != nil {
-		return url.Values{}, errors.New("failed to send http request")
+		return nil, errors.New("failed to send http request")
 	}
 
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
 		err := fmt.Sprintf("API Error: %s", resp.Header.Get(xErrorHeader))
-		return url.Values{}, errors.New(err)
+		return nil, errors.New(err)
 	}
 
 	respB, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return url.Values{}, errors.New("failed to read request body")
+		return nil, errors.New("failed to read request body")
 	}
 
-	values, err := url.ParseQuery(string(respB))
+	var values map[string]interface{}
+	err = json.Unmarshal(respB, &values)
 	if err != nil {
-		return url.Values{}, errors.New("failed to parse response body")
+		return nil, errors.New("failed to parse response body")
 	}
 
 	return values, nil
