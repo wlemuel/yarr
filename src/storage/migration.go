@@ -318,7 +318,7 @@ func m10_add_pocket(tx *sql.Tx) error {
 
 func m11_update_pocket_link_type(tx *sql.Tx) error {
 	sql := `
-	    ALTER TABLE items DROP COLUMN link_pocket;
+		ALTER TABLE items DROP COLUMN link_pocket;
 		ALTER TABLE items ADD COLUMN link_pocket TEXT DEFAULT "";
 	`
 	
