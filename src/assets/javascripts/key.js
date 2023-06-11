@@ -42,12 +42,12 @@ var helperFunctions = {
     }
 
     var newPosition = itemPosition + relativePosition;
-    if (newPosition < 0) {
+    if (newPosition < 0 && !vm.loading.items) {
       this.navigateToFeed(-1)
       return;
     }
 
-    if (newPosition >= vm.items.length) {
+    if (newPosition >= vm.items.length && !vm.loading.items) {
       this.navigateToFeed(+1)
       return;
     }

@@ -52,7 +52,7 @@ type Item struct {
 	Status     ItemStatus `json:"status"`
 	ImageURL   *string    `json:"image"`
 	AudioURL   *string    `json:"podcast_url"`
-	LinkPocket string    `json:"link_pocket"`
+	LinkPocket string     `json:"link_pocket"`
 }
 
 type ItemFilter struct {
