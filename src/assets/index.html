@@ -150,7 +150,7 @@
                                 {% inline "chevron-right.svg" %}
                             </span>
                             <span class="flex-fill text-left text-truncate">{{ folder.title }}</span>
-                            <span class="counter text-right">{{ filteredFolderStats[folder.id] || '' }}</span>
+                            <span class="counter text-right">{{ filteredFolderStats[folder.id] > 0 ? filteredFolderStats[folder.id] : '' }}</span>
                         </div>
                     </label>
                     <div v-show="!folder.id || folder.is_expanded" class="mt-1" :class="{'pl-3': folder.id}">
