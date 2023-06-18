@@ -66,8 +66,14 @@ func (s *Server) handler() http.Handler {
 }
 
 func (s *Server) handleIndex(c *router.Context) {
+	settings := s.db.GetSettings()
+
+	// remove sensitive data
+	settings["access_token"] = ""
+	settings["consumer_key"] = ""
+
 	c.HTML(http.StatusOK, assets.Template("index.html"), map[string]interface{}{
-		"settings":      s.db.GetSettings(),
+		"settings":      settings,
 		"authenticated": s.Username != "" && s.Password != "",
 	})
 }
