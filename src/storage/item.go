@@ -141,7 +141,7 @@ func listQueryPredicate(filter ItemFilter, newestFirst bool) (string, []interfac
 		args = append(args, *filter.After)
 	}
 	if filter.TodayOnly {
-		cond = append(cond, "i.date > date('now', 'start of day')")
+		cond = append(cond, "i.date > date('now', 'start of day', '-1 day')")
 	}
 
 	predicate := "1"
