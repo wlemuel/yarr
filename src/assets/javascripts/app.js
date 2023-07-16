@@ -244,7 +244,8 @@ var vm = new Vue({
       },
       'refreshRate': s.refresh_rate,
       'authenticated': app.authenticated,
-      'feed_errors': {}
+      'feed_errors': {},
+      'today_only': false
     }
   },
   computed: {
@@ -410,6 +411,9 @@ var vm = new Vue({
       }
       if (!this.itemSortNewestFirst) {
         query.oldest_first = true
+      }
+      if (this.today_only) {
+        query.today_only = true
       }
       return query
     },
@@ -749,6 +753,10 @@ var vm = new Vue({
         if (itemInList) itemInList.link_pocket = result.link_pocket
         item.link_pocket = result.link_pocket
       }.bind(this))
+    },
+    toggleTodayOnly: function() {
+      this.today_only = !this.today_only
+      this.refreshItems()
     }
   }
 })

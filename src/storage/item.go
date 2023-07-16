@@ -56,11 +56,12 @@ type Item struct {
 }
 
 type ItemFilter struct {
-	FolderID *int64
-	FeedID   *int64
-	Status   *ItemStatus
-	Search   *string
-	After    *int64
+	FolderID  *int64
+	FeedID    *int64
+	Status    *ItemStatus
+	Search    *string
+	After     *int64
+	TodayOnly bool
 }
 
 type MarkFilter struct {
@@ -138,6 +139,9 @@ func listQueryPredicate(filter ItemFilter, newestFirst bool) (string, []interfac
 		}
 		cond = append(cond, fmt.Sprintf("(i.date, i.id) %s (select date, id from items where id = ?)", compare))
 		args = append(args, *filter.After)
+	}
+	if filter.TodayOnly {
+		cond = append(cond, "i.date > date('now', 'start of day')")
 	}
 
 	predicate := "1"

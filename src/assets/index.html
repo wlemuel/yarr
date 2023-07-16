@@ -197,6 +197,12 @@
                     <input id="searchbar" type="" class="d-block toolbar-search" v-model="itemSearch" @keydown.enter="$event.target.blur()">
                 </div>
                 <button class="toolbar-item ml-2"
+                        @click="toggleTodayOnly()"
+                        :class="{active: today_only}"
+                        title="Today Only">
+                    <span>今</span>
+                </button>
+                <button class="toolbar-item ml-2"
                         @click="markItemsRead()"
                         v-if="filterSelected == 'unread'"
                         title="Mark All Read">

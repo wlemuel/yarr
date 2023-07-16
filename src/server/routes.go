@@ -364,6 +364,9 @@ func (s *Server) handleItemList(c *router.Context) {
 		if search := query.Get("search"); len(search) != 0 {
 			filter.Search = &search
 		}
+		if todayOnly := query.Get("today_only"); todayOnly == "true" {
+			filter.TodayOnly = true
+		}
 		newestFirst := query.Get("oldest_first") != "true"
 
 		items := s.db.ListItems(filter, perPage+1, newestFirst)
