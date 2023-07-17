@@ -200,7 +200,7 @@
                         @click="toggleTodayOnly()"
                         :class="{active: today_only}"
                         title="Today Only">
-                    <span>今</span>
+                    <span class="icon">{% inline "filter.svg" %}</span>
                 </button>
                 <button class="toolbar-item ml-2"
                         @click="markItemsRead()"
