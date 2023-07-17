@@ -446,6 +446,11 @@ var vm = new Vue({
         vm.itemsHasMore = data.has_more
         vm.loading.items = false
 
+        // select the first item automatically
+        if (vm.itemSelected === null && vm.items.length > 0) {
+          vm.itemSelected = vm.items[0].id
+        }
+
         // load more if there's some space left at the bottom of the item list.
         vm.$nextTick(function() {
           if (vm.itemsHasMore && !vm.loading.items && vm.itemListCloseToBottom()) {
