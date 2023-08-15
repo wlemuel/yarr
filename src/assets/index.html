@@ -136,7 +136,7 @@
                         <span class="counter text-right">{{ filteredTotalStats }}</span>
                     </div>
                 </label>
-                <div v-for="(folder, folderIndex) in foldersWithFeeds" :key="folderIndex">
+                <div v-for="folder in foldersWithFeeds">
                     <label class="selectgroup mt-1"
                            :class="{'d-none': filterSelected
                                               && !(current.folder.id == folder.id || current.feed.folder_id == folder.id)
@@ -149,8 +149,7 @@
                                   @click.prevent="toggleFolderExpanded(folder)">
                                 {% inline "chevron-right.svg" %}
                             </span>
-                            <span class="flex-fill text-left text-truncate" v-if="isPC && folderIndex < 9">[{{ folderIndex + 1 }}] {{ folder.title }}</span>
-                            <span class="flex-fill text-left text-truncate" v-else>{{ folder.title }}</span>
+                            <span class="flex-fill text-left text-truncate">{{ folder.title }}</span>
                             <span class="counter text-right">{{ filteredFolderStats[folder.id] > 0 ? filteredFolderStats[folder.id] : '' }}</span>
                         </div>
                     </label>

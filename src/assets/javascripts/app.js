@@ -246,7 +246,7 @@ var vm = new Vue({
       'authenticated': app.authenticated,
       'feed_errors': {},
       'today_only': false,
-      'isPC': window.innerWidth > 1000
+      'isPC': window.innerWidth > 1000,
     }
   },
   computed: {

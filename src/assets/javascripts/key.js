@@ -128,6 +128,19 @@ var helperFunctions = {
       if (target && scroll) scrollto(target, scroll);
     });
   },
+  showFolderIndex: function() {
+    Array.from(
+      document.querySelectorAll("#col-feed-list input[name=feed]")
+    )
+    .filter(function (r) {
+      return r.offsetParent !== null && r.value !== "folder:null" && r.value.startsWith("folder");
+    })
+    .map(function (r) {
+      return r.nextElementSibling.getElementsByTagName('span')[1];
+    }).forEach((element, index) => {
+      element.textContent = `[${index + 1}] ${element.textContent}`;
+    });
+  },
   scrollContent: function (direction) {
     var padding = 40;
     var scroll = document.querySelector(".content");
