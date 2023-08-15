@@ -246,7 +246,7 @@ var vm = new Vue({
       'authenticated': app.authenticated,
       'feed_errors': {},
       'today_only': false,
-      'isPc': window.innerWidth > 1000
+      'isPC': window.innerWidth > 1000
     }
   },
   computed: {
@@ -448,7 +448,7 @@ var vm = new Vue({
         vm.loading.items = false
 
         // select the first item automatically in PC View
-        if (vm.isPc && vm.itemSelected === null && vm.items.length > 0) {
+        if (vm.isPC && vm.itemSelected === null && vm.items.length > 0) {
           vm.itemSelected = vm.items[0].id
         }
 

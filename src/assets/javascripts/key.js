@@ -104,6 +104,30 @@ var helperFunctions = {
       if (target && scroll) scrollto(target, scroll);
     });
   },
+  navigateToFeedPos: function (pos) {
+    var navigationList = Array.from(
+      document.querySelectorAll("#col-feed-list input[name=feed]")
+    )
+    .filter(function (r) {
+      return r.offsetParent !== null && r.value !== "folder:null" && r.value.startsWith("folder");
+    })
+    .map(function (r) {
+      return r.value;
+    });
+
+    if (pos < 0 || pos >= navigationList.length) return;
+
+    vm.feedSelected = navigationList[pos];
+
+    vm.$nextTick(function () {
+      var scroll = document.querySelector("#feed-list-scroll");
+
+      var handle = scroll.querySelector("input[type=radio]:checked");
+      var target = handle && handle.parentElement;
+
+      if (target && scroll) scrollto(target, scroll);
+    });
+  },
   scrollContent: function (direction) {
     var padding = 40;
     var scroll = document.querySelector(".content");
@@ -158,6 +182,9 @@ var shortcutFunctions = {
   },
   previousFeed() {
     helperFunctions.navigateToFeed(-1);
+  },
+  gotoFeed(event) {
+    helperFunctions.navigateToFeedPos(parseInt(event.key) - 1);
   },
   scrollForward: function () {
     helperFunctions.scrollContent(+1);
@@ -295,15 +322,24 @@ var keybindings = {
   p: shortcutFunctions.scrollBackwardSmall,
   P: shortcutFunctions.pocketAdd,
   t: shortcutFunctions.toggleTheme,
-  1: shortcutFunctions.showUnread,
-  2: shortcutFunctions.showStarred,
-  3: shortcutFunctions.showAll,
+  "!": shortcutFunctions.showUnread, // shift + "1"
+  "@": shortcutFunctions.showStarred, // shift + "2"
+  "#": shortcutFunctions.showAll, // shift + "3"
   "?": shortcutFunctions.toggleShortcuts,
   "=": shortcutFunctions.increaseFontSize,
   "-": shortcutFunctions.decreaseFontSize,
   "+": shortcutFunctions.resetFontSize,
   "]": shortcutFunctions.nextItem,
   "[": shortcutFunctions.previousItem,
+  1: shortcutFunctions.gotoFeed,
+  2: shortcutFunctions.gotoFeed,
+  3: shortcutFunctions.gotoFeed,
+  4: shortcutFunctions.gotoFeed,
+  5: shortcutFunctions.gotoFeed,
+  6: shortcutFunctions.gotoFeed,
+  7: shortcutFunctions.gotoFeed,
+  8: shortcutFunctions.gotoFeed,
+  9: shortcutFunctions.gotoFeed,
 };
 
 var codebindings = {
@@ -323,9 +359,9 @@ var codebindings = {
   KeyN: shortcutFunctions.scrollForward,
   KeyP: shortcutFunctions.scrollBackward,
   KeyT: shortcutFunctions.toggleTheme,
-  Digit1: shortcutFunctions.showUnread,
-  Digit2: shortcutFunctions.showStarred,
-  Digit3: shortcutFunctions.showAll,
+  // Digit1: shortcutFunctions.showUnread,
+  // Digit2: shortcutFunctions.showStarred,
+  // Digit3: shortcutFunctions.showAll,
   Enter: shortcutFunctions.toggleFolder,
   Space: shortcutFunctions.scrollForward,
   Escape: shortcutFunctions.closeDialog,
@@ -369,7 +405,7 @@ document.addEventListener("keydown", function (event) {
   var keybindFunction = keybindings[event.key] || codebindings[event.code];
   if (keybindFunction) {
     event.preventDefault();
-    keybindFunction();
+    keybindFunction(event);
   }
 });
 
