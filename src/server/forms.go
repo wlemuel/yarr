@@ -6,6 +6,10 @@ type ItemUpdateForm struct {
 	Status *storage.ItemStatus `json:"status,omitempty"`
 }
 
+type ItemsMarkReadForm struct {
+	FeedIds *string `json:"feed_ids"`
+}
+
 type FolderCreateForm struct {
 	Title string `json:"title"`
 }

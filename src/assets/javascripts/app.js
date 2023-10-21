@@ -351,6 +351,7 @@ var vm = new Vue({
             this.itemSelectedDetails.status = 'read'
           }.bind(this))
         }
+        this.markItemBeforeAllRead(item)
       }.bind(this))
     },
     'itemSearch': debounce(function(newVal) {
@@ -763,6 +764,25 @@ var vm = new Vue({
     toggleTodayOnly: function() {
       this.today_only = !this.today_only
       this.refreshItems()
+    },
+    markItemBeforeAllRead: function(cur_item) {
+      var unreadList = []
+
+      for (const item of this.items) {
+        if (item.id === cur_item.id) {
+          break
+        }
+
+        if (item.status === 'unread') {
+          item.status = 'read'
+          unreadList.push(item.id)
+        }
+      }
+
+      const unreads = unreadList.join(',')
+      if (unreads !== '') {
+        api.items.mark_items_read(unreads);
+      }
     }
   }
 })

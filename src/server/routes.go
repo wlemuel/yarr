@@ -390,6 +390,25 @@ func (s *Server) handleItemList(c *router.Context) {
 		}
 		s.db.MarkItemsRead(filter)
 		c.Out.WriteHeader(http.StatusOK)
+	} else if c.Req.Method == "POST" {
+		var body ItemsMarkReadForm
+		if err := json.NewDecoder(c.Req.Body).Decode(&body); err != nil {
+			log.Print(err)
+			c.Out.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		if body.FeedIds != nil {
+			for _, feedIdStr := range strings.Split(*body.FeedIds, ",") {
+				feedId, err := strconv.ParseInt(feedIdStr, 10, 64)
+				if err != nil {
+					continue
+				}
+				s.db.UpdateItemStatus(feedId, storage.READ)
+			}
+		}
+
+		c.Out.WriteHeader(http.StatusOK)
 	} else {
 		c.Out.WriteHeader(http.StatusMethodNotAllowed)
 	}
