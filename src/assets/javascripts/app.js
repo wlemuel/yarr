@@ -782,6 +782,7 @@ var vm = new Vue({
       const unreads = unreadList.join(',')
       if (unreads !== '') {
         api.items.mark_items_read(unreads);
+        this.feedStats[cur_item.feed_id].unread -= unreadList.length
       }
     }
   }
