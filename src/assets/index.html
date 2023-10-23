@@ -196,12 +196,12 @@
                     <!-- id used by keybindings -->
                     <input id="searchbar" type="" class="d-block toolbar-search" v-model="itemSearch" @keydown.enter="$event.target.blur()">
                 </div>
-                <button class="toolbar-item ml-2"
+                <!-- <button class="toolbar-item ml-2"
                         @click="toggleTodayOnly()"
                         :class="{active: today_only}"
                         title="Today Only">
                     <span class="icon">{% inline "filter.svg" %}</span>
-                </button>
+                </button> -->
                 <button class="toolbar-item ml-2"
                         @click="markItemsRead()"
                         v-if="filterSelected == 'unread'"

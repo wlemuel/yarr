@@ -1,6 +1,7 @@
 'use strict';
 
 var TITLE = document.title
+const IS_PHONE = window.innerWidth <= 768
 
 // LocalStorage Keys
 const KEY_CONTENT_NAV_POS = 'CONTENT_NAV_POS'
@@ -766,6 +767,10 @@ var vm = new Vue({
       this.refreshItems()
     },
     markItemBeforeAllRead: function(cur_item) {
+      if (!IS_PHONE) {
+        return
+      }
+
       var unreadList = []
 
       for (const item of this.items) {
