@@ -1,7 +1,7 @@
 'use strict';
 
 var TITLE = document.title
-const IS_PHONE = window.innerWidth <= 768
+// const IS_PHONE = window.innerWidth <= 768
 
 // LocalStorage Keys
 const KEY_CONTENT_NAV_POS = 'CONTENT_NAV_POS'
@@ -767,7 +767,7 @@ var vm = new Vue({
       this.refreshItems()
     },
     markItemBeforeAllRead: function(cur_item) {
-      if (!IS_PHONE) {
+      if (this.isPC) {
         return
       }
 
