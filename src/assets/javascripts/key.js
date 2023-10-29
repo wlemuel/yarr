@@ -310,6 +310,9 @@ var shortcutFunctions = {
     if (vm.itemSelected != null) {
       vm.pocketAdd(vm.itemSelectedDetails);
     }
+  },
+  closeItem: function () {
+    vm.itemSelected = null
   }
 };
 
@@ -335,6 +338,7 @@ var keybindings = {
   p: shortcutFunctions.scrollBackwardSmall,
   P: shortcutFunctions.pocketAdd,
   t: shortcutFunctions.toggleTheme,
+  x: shortcutFunctions.closeItem,
   "!": shortcutFunctions.showUnread, // shift + "1"
   "@": shortcutFunctions.showStarred, // shift + "2"
   "#": shortcutFunctions.showAll, // shift + "3"
