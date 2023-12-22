@@ -110,6 +110,12 @@
         body: new FormData(form),
       })
     },
+    execute_sql: function (form) {
+      return xfetch('./sql/import', {
+        method: 'post',
+        body: new FormData(form),
+      })
+    },
     logout: function () {
       return api('post', './logout')
     },

@@ -248,6 +248,7 @@ var vm = new Vue({
       'feed_errors': {},
       'today_only': false,
       'isPC': window.innerWidth > 1000,
+      'sqlResult': ''
     }
   },
   computed: {
@@ -637,6 +638,16 @@ var vm = new Vue({
       var form = document.querySelector('#opml-import-form')
       this.$refs.menuDropdown.hide()
       api.upload_opml(form).then(function() {
+        input.value = ''
+        vm.refreshFeeds()
+        vm.refreshStats()
+      })
+    },
+    executeSql: function(event) {
+      var input = event.target
+      var form = document.querySelector('#sql-import-form')
+      this.$refs.menuDropdown.hide()
+      api.execute_sql(form).then(function() {
         input.value = ''
         vm.refreshFeeds()
         vm.refreshStats()

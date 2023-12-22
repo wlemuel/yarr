@@ -113,6 +113,17 @@
                         <span class="icon mr-1">{% inline "pocket.svg" %}</span>
                         Link Pocket
                     </button>
+                    <form id="sql-import-form" enctype="multipart/form-data" tabindex="-1">
+                        <input type="file"
+                               id="sql-import"
+                               @change="executeSql"
+                               name="sql"
+                               style="opacity: 0; width: 1px; height: 0; position: absolute; z-index: -1;">
+                        <label class="dropdown-item mb-0 cursor-pointer" for="sql-import" @click.stop="">
+                            <span class="icon mr-1">{% inline "download.svg" %}</span>
+                            Execute SQL
+                        </label>
+                    </form>
                     <div class="dropdown-divider"></div>
                     <button class="dropdown-item" @click="showSettings('shortcuts')">
                         <span class="icon mr-1">{% inline "help-circle.svg" %}</span>

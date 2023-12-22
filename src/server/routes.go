@@ -20,6 +20,7 @@ import (
 	"github.com/nkanaev/yarr/src/server/gzip"
 	"github.com/nkanaev/yarr/src/server/opml"
 	"github.com/nkanaev/yarr/src/server/router"
+	"github.com/nkanaev/yarr/src/server/sql"
 	"github.com/nkanaev/yarr/src/storage"
 	"github.com/nkanaev/yarr/src/worker"
 )
@@ -61,6 +62,7 @@ func (s *Server) handler() http.Handler {
 	r.For("/proxy", s.handleImageProxy)
 	r.For("/pocket/auth", s.handlePocketAuth)
 	r.For("/pocket/add/:id", s.handlePocketAdd)
+	r.For("/sql/import", s.handleSqlImport)
 
 	return r
 }
@@ -636,6 +638,26 @@ func (s *Server) handlePocketAdd(c *router.Context) {
 		}
 		c.JSON(http.StatusOK, map[string]string{"link_pocket": linkPocket})
 
+	} else {
+		c.Out.WriteHeader(http.StatusMethodNotAllowed)
+	}
+}
+
+func (s *Server) handleSqlImport(c *router.Context) {
+	if c.Req.Method == "POST" {
+		file, _, err := c.Req.FormFile("sql")
+		if err != nil {
+			log.Print(err)
+			return
+		}
+
+		err = sql.Execute(file, s.db.GetDB())
+		if err != nil {
+			log.Print(err)
+			c.Out.WriteHeader(http.StatusBadRequest)
+			return
+		}
+		c.Out.WriteHeader(http.StatusOK)
 	} else {
 		c.Out.WriteHeader(http.StatusMethodNotAllowed)
 	}

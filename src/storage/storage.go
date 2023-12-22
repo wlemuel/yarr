@@ -2,6 +2,7 @@ package storage
 
 import (
 	"database/sql"
+
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -22,4 +23,8 @@ func New(path string) (*Storage, error) {
 		return nil, err
 	}
 	return &Storage{db: db}, nil
+}
+
+func (s *Storage) GetDB() *sql.DB {
+	return s.db
 }
