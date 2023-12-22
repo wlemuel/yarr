@@ -483,6 +483,7 @@ var vm = new Vue({
         vm.itemsPage = {'cur': 1, 'num': 1}
         vm.itemSelected = null
         vm.itemsHasMore = false
+        vm.feedSelected = null
         vm.refreshStats()
       })
     },
