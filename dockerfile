@@ -2,7 +2,7 @@ FROM golang:alpine3.17 AS build
 RUN apk add build-base git
 WORKDIR /src
 COPY . .
-RUN make build_linux
+RUN go mod download && make build_linux
 
 FROM alpine:latest
 RUN apk add --no-cache ca-certificates && \
