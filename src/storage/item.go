@@ -79,6 +79,10 @@ func (s *Storage) CreateItems(items []Item) bool {
 	now := time.Now().UTC()
 
 	for _, item := range items {
+		if strings.ToLower(item.Title) == "untitled" {
+			continue
+		}
+
 		_, err = tx.Exec(`
 			insert into items (
 				guid, feed_id, title, link, date,
