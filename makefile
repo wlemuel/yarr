@@ -6,6 +6,8 @@ CGO_ENABLED=1
 GO_LDFLAGS  = -s -w
 GO_LDFLAGS := $(GO_LDFLAGS) -X 'main.Version=$(VERSION)' -X 'main.GitHash=$(GITHASH)'
 
+.PHONY: build_default serve test clean
+
 build_default:
 	mkdir -p _output
 	go build -tags "sqlite_foreign_keys release" -ldflags="$(GO_LDFLAGS)" -o _output/yarr src/main.go
@@ -35,3 +37,7 @@ serve:
 
 test:
 	cd src && go test -tags "sqlite_foreign_keys release" ./...
+
+clean:
+	@rm -rf _output/yarr
+	@rm -rf local.db
