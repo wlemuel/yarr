@@ -118,6 +118,9 @@ func (w *Worker) refresher(feeds []storage.Feed) {
 	}
 
 	for _, feed := range feeds {
+		if feed.Icon == nil {
+			w.FindFeedFavicon(feed)
+		}
 		srcqueue <- feed
 	}
 	for i := 0; i < len(feeds); i++ {
