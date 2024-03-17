@@ -3,6 +3,7 @@ module github.com/nkanaev/yarr
 go 1.21
 
 require (
+	github.com/mattn/go-sqlite3 v1.14.22
 	github.com/tursodatabase/libsql-client-go v0.0.0-20240220085343-4ae0eb9d0898
 	golang.org/x/net v0.21.0
 	golang.org/x/sys v0.17.0
